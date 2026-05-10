@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="Ajedrez PMD Ruleset"
+         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.github.io/schema/ruleset_2_0_0.xsd">
+
+    <description>
+        Conjunto de reglas PMD utilizado para la Practica 4 de ACCSI sobre el proyecto de ajedrez.
+        Combina las categorias bestpractices, codestyle, design, errorprone, multithreading y performance,
+        con exclusiones puntuales adaptadas al estilo y al alcance actual del proyecto academico.
+    </description>
+
+    <!-- Categoria: Best Practices -->
+    <rule ref="category/java/bestpractices.xml">
+        <exclude name="JUnitTestsShouldIncludeAssert"/>
+        <exclude name="JUnitAssertionsShouldIncludeMessage"/>
+        <exclude name="JUnitTestContainsTooManyAsserts"/>
+        <exclude name="GuardLogStatement"/>
+    </rule>
+
+    <!-- Categoria: Code Style -->
+    <rule ref="category/java/codestyle.xml">
+        <exclude name="AtLeastOneConstructor"/>
+        <exclude name="OnlyOneReturn"/>
+        <exclude name="LongVariable"/>
+        <exclude name="ShortVariable"/>
+        <exclude name="ShortMethodName"/>
+        <exclude name="ShortClassName"/>
+        <exclude name="ClassNamingConventions"/>
+        <exclude name="MethodNamingConventions"/>
+        <exclude name="LocalVariableNamingConventions"/>
+        <exclude name="FormalParameterNamingConventions"/>
+        <exclude name="FieldNamingConventions"/>
+        <exclude name="CommentDefaultAccessModifier"/>
+        <exclude name="CallSuperInConstructor"/>
+        <exclude name="UseUnderscoresInNumericLiterals"/>
+    </rule>
+
+    <!-- Categoria: Design -->
+    <rule ref="category/java/design.xml">
+        <exclude name="LawOfDemeter"/>
+        <exclude name="LoosePackageCoupling"/>
+        <exclude name="DataClass"/>
+    </rule>
+
+    <!-- Categoria: Error Prone -->
+    <rule ref="category/java/errorprone.xml">
+        <exclude name="BeanMembersShouldSerialize"/>
+        <exclude name="MissingSerialVersionUID"/>
+        <exclude name="AvoidLiteralsInIfCondition"/>
+    </rule>
+
+    <!-- Categoria: Multithreading -->
+    <rule ref="category/java/multithreading.xml"/>
+
+    <!-- Categoria: Performance -->
+    <rule ref="category/java/performance.xml"/>
+
+</ruleset>

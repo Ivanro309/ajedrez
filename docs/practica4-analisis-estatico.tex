@@ -1,0 +1,702 @@
+\documentclass[12pt,a4paper]{article}
+
+% --- Codificacion y idioma ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-noshorthands]{babel}
+
+% --- Tipografia: Garamond 12 pt segun normas de la practica ---
+\usepackage[lf]{ebgaramond}
+\usepackage[ttdefault=true]{AnonymousPro}
+
+% --- Geometria de pagina ---
+\usepackage[a4paper,top=2.3cm,bottom=2.3cm,left=2.5cm,right=2.5cm]{geometry}
+
+% --- Paquetes auxiliares ---
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{caption}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{parskip}
+
+% --- Configuracion de hyperref ---
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=black,
+    urlcolor=blue!60!black,
+    pdftitle={Practica 4 - Analisis estatico de codigo (PMD)},
+    pdfauthor={Ivan Rodriguez Miranda}
+}
+
+% --- Configuracion de listings (codigo fuente) ---
+\definecolor{codebg}{RGB}{248,248,248}
+\definecolor{codeframe}{RGB}{200,200,200}
+\definecolor{codekw}{RGB}{0,0,180}
+\definecolor{codestr}{RGB}{163,21,21}
+\definecolor{codecmt}{RGB}{0,128,0}
+
+\lstset{
+    basicstyle=\ttfamily\small,
+    backgroundcolor=\color{codebg},
+    frame=single,
+    rulecolor=\color{codeframe},
+    breaklines=true,
+    breakatwhitespace=true,
+    columns=fullflexible,
+    keepspaces=true,
+    showstringspaces=false,
+    keywordstyle=\color{codekw}\bfseries,
+    stringstyle=\color{codestr},
+    commentstyle=\color{codecmt}\itshape,
+    tabsize=4,
+    captionpos=b,
+    xleftmargin=0.5em,
+    xrightmargin=0.5em
+}
+
+\lstdefinelanguage{XMLext}{
+    morestring=[b]",
+    morecomment=[s]{<?}{?>},
+    morecomment=[s]{<!--}{-->},
+    morekeywords={ruleset,rule,exclude,description,xmlns,xsi,plugin,groupId,artifactId,version,configuration,executions,execution,goal,goals,rulesets,excludes,targetJdk,failOnViolation,printFailingErrors,linkXRef,reporting,build,plugins},
+    sensitive=true
+}
+
+% --- Estilos de seccion ---
+\titleformat{\section}{\Large\bfseries}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{0.6em}{}
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+
+% --- Comando para celdas con salto de linea controlado ---
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+% --- Datos de portada ---
+\title{
+    \vspace{-1.5cm}
+    {\large Asignatura de Calidad y Confianza en los Sistemas Inform\'aticos (ACCSI)} \\[0.4em]
+    {\large Curso 2025/2026} \\[1.5em]
+    \textbf{Pr\'actica 4: Herramientas de an\'alisis est\'atico de c\'odigo} \\[0.4em]
+    {\large An\'alisis del proyecto \emph{ajedrez} con PMD}
+}
+\author{Iv\'an Rodr\'iguez Miranda}
+\date{9 de mayo de 2026}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+
+\begin{center}
+\begin{tabular}{rl}
+\toprule
+\textbf{Herramienta} & PMD 7.7.0 (Maven PMD Plugin 3.26.0) \\
+\textbf{Proyecto evaluado} & \texttt{ajedrez} (Java 21, Maven) \\
+\textbf{Fecha del an\'alisis} & 09/05/2026 \\
+\textbf{Archivos analizados} & 21 ficheros \texttt{.java} \\
+\textbf{L\'ineas de c\'odigo} & 1145 l\'ineas en \texttt{src/main/java} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{1em}
+\tableofcontents
+\newpage
+
+% =====================================================================
+\section{Objetivo de la pr\'actica}
+% =====================================================================
+
+El objetivo de esta pr\'actica es aplicar una herramienta de an\'alisis est\'atico de c\'odigo
+sobre un proyecto Java propio, interpretar los resultados obtenidos y relacionarlos con las
+caracter\'isticas de calidad del software definidas por la familia de est\'andares
+ISO/IEC 25000 (modelo de calidad SQuaRE). Para ello se utiliza \textbf{PMD}, un analizador
+est\'atico que aplica conjuntos de reglas para detectar posibles defectos, c\'odigo no
+utilizado, patrones propensos a error, malas pr\'acticas de programaci\'on y problemas de
+mantenibilidad o rendimiento.
+
+% =====================================================================
+\section{Descripci\'on del c\'odigo Java evaluado}
+% =====================================================================
+
+El c\'odigo evaluado corresponde a una aplicaci\'on Java de ajedrez organizada en paquetes
+de modelo, vista y controlador siguiendo el patr\'on MVC. La parte m\'as desarrollada es el
+modelo (tablero, casillas y piezas) junto con el controlador del juego.
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{Dato} & \textbf{Valor} \\
+\midrule
+Fecha del an\'alisis & 09/05/2026 \\
+Lenguaje & Java \\
+Versi\'on de compilaci\'on (\texttt{release}) & Java 21 \\
+JVM usada en la ejecuci\'on & OpenJDK 25.0.2 \\
+Sistema de construcci\'on & Apache Maven 3.8.5 \\
+Archivos \texttt{.java} evaluados & 21 \\
+L\'ineas totales en \texttt{src/main/java} & 1145 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Distribuci\'on por paquetes}
+
+\begin{center}
+\begin{tabularx}{\textwidth}{lX}
+\toprule
+\textbf{Paquete} & \textbf{Responsabilidad} \\
+\midrule
+\texttt{com.ajedrez} & Clase principal \texttt{App} (punto de entrada JavaFX). \\
+\texttt{com.ajedrez.modelo} & Tablero, casillas, color y clase abstracta \texttt{Pieza}. \\
+\texttt{com.ajedrez.modelo.piezas} & Reglas de movimiento de Alfil, Caballo, Pe\'on, Rey, Reina y Torre. \\
+\texttt{com.ajedrez.controlador} & \texttt{ControladorJuego} y \texttt{ControladorTablero}. \\
+\texttt{com.ajedrez.vista} & \texttt{VistaTablero} (interfaz JavaFX). \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\subsection{Trabajo de c\'odigo realizado antes del an\'alisis}
+
+\begin{center}
+\begin{tabularx}{\textwidth}{lX}
+\toprule
+\textbf{Archivo} & \textbf{Actuaci\'on} \\
+\midrule
+\texttt{Torre.java} & Implementada como subclase de \texttt{Pieza} con validaci\'on de movimientos rectos, control de piezas intermedias y captura. \\
+\texttt{Reina.java} & Combina movimientos rectos y diagonales con camino libre y captura v\'alida. \\
+\texttt{Rey.java} & Permite un \'unico desplazamiento de una casilla en cualquier direcci\'on. \\
+\texttt{Caballo.java} & Validaci\'on del movimiento en L y documentaci\'on. \\
+\texttt{Peon.java} & Avance seg\'un color, doble avance inicial, bloqueo frontal y captura diagonal. No contempla captura al paso. \\
+\texttt{package-info.java} & Documentaci\'on JavaDoc de cada paquete. \\
+\texttt{App.java} & Punto de entrada JavaFX y configuraci\'on de la ventana principal. \\
+\texttt{VistaTablero.java} & Tablero 8x8 con piezas, selecci\'on, turnos, mensajes y reinicio. \\
+\texttt{ControladorJuego.java} & Coordinaci\'on de tablero, turno actual, selecci\'on y movimiento. \\
+\texttt{Tablero.java} & Inicializaci\'on de piezas, limpieza, colocaci\'on y movimiento validado. \\
+\texttt{ajedrez.css} & Hoja de estilos JavaFX para el tablero y los estados visuales. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+% =====================================================================
+\section{Instalaci\'on y configuraci\'on de PMD}
+% =====================================================================
+
+PMD se ha integrado a trav\'es de Maven utilizando el plugin oficial
+\texttt{maven-pmd-plugin}, definido en \texttt{pom.xml} tanto en \texttt{<build>}
+(para ejecutar el goal \texttt{check} en cada \texttt{verify}) como en
+\texttt{<reporting>} (para generar el informe HTML mediante \texttt{site}).
+
+\begin{lstlisting}[language=XMLext,caption={Configuraci\'on de PMD en \texttt{pom.xml}}]
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-pmd-plugin</artifactId>
+    <version>3.26.0</version>
+    <configuration>
+        <targetJdk>21</targetJdk>
+        <failOnViolation>false</failOnViolation>
+        <printFailingErrors>true</printFailingErrors>
+        <linkXRef>false</linkXRef>
+        <rulesets>
+            <ruleset>${project.basedir}/pmd-ruleset.xml</ruleset>
+        </rulesets>
+        <excludes>
+            <exclude>com/ajedrez/App.java</exclude>
+            <exclude>com/ajedrez/vista/**</exclude>
+        </excludes>
+    </configuration>
+    <executions>
+        <execution>
+            <goals>
+                <goal>check</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
+\end{lstlisting}
+
+\textbf{Decisiones de configuraci\'on:}
+
+\begin{itemize}[leftmargin=1.4em]
+\item \texttt{targetJdk=21} fija el nivel de compatibilidad de an\'alisis con la versi\'on de
+      compilaci\'on declarada en el proyecto.
+\item \texttt{failOnViolation=false} permite obtener el informe completo sin que el ciclo
+      Maven se interrumpa cuando aparecen violaciones, algo deseable para una pr\'actica
+      acad\'emica donde el inter\'es es analizar los hallazgos, no bloquear la build.
+\item Se excluyen \texttt{App.java} y todo el paquete \texttt{com/ajedrez/vista/**}: en el
+      entorno usado (JDK 25.0.2) PMD lanza errores internos al resolver tipos JavaFX. La
+      exclusi\'on mantiene el an\'alisis estable sobre el modelo y los controladores, que
+      son la parte central de la l\'ogica del juego.
+\item Se utiliza un \textbf{ruleset propio}, m\'as completo que el ruleset por defecto del
+      plugin Maven, para poder evaluar caracter\'isticas de calidad con suficiente cobertura.
+\end{itemize}
+
+% =====================================================================
+\section{Reglas utilizadas y justificaci\'on}
+% =====================================================================
+
+Se ha definido un ruleset propio en \texttt{pmd-ruleset.xml} que combina seis categor\'ias
+oficiales de PMD. La elecci\'on busca cubrir las dimensiones m\'as relevantes de la
+calidad del c\'odigo en un proyecto en fase inicial (correctitud, claridad, mantenibilidad,
+rendimiento) sin caer en reglas excesivamente estrictas que generan ruido en c\'odigo
+acad\'emico (longitud de nombres, n\'umero de retornos, etc.).
+
+\begin{lstlisting}[language=XMLext,caption={Extracto del ruleset propio \texttt{pmd-ruleset.xml}}]
+<ruleset name="Ajedrez PMD Ruleset"
+         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0">
+    <rule ref="category/java/bestpractices.xml"/>
+    <rule ref="category/java/codestyle.xml">
+        <exclude name="OnlyOneReturn"/>
+        <exclude name="LongVariable"/>
+        <exclude name="ShortVariable"/>
+        ...
+    </rule>
+    <rule ref="category/java/design.xml">
+        <exclude name="LawOfDemeter"/>
+        <exclude name="LoosePackageCoupling"/>
+        <exclude name="DataClass"/>
+    </rule>
+    <rule ref="category/java/errorprone.xml"/>
+    <rule ref="category/java/multithreading.xml"/>
+    <rule ref="category/java/performance.xml"/>
+</ruleset>
+\end{lstlisting}
+
+\subsection{Categor\'ias seleccionadas y justificaci\'on}
+
+\begin{center}
+\begin{tabularx}{\textwidth}{l X X}
+\toprule
+\textbf{Categor\'ia} & \textbf{Justificaci\'on de uso} & \textbf{Caracter\'isticas ISO/IEC 25000} \\
+\midrule
+\texttt{bestpractices} & Detecta c\'odigo no utilizado, malos h\'abitos generales y construcciones que dificultan la evoluci\'on. & Mantenibilidad, fiabilidad. \\
+\texttt{codestyle} & Garantiza claridad y legibilidad uniforme. Reduce el ruido sint\'actico que esconde defectos. & Mantenibilidad. \\
+\texttt{design} & Identifica clases o m\'etodos con dise\~no mejorable: complejidad accidental, acoplamiento, abstracciones d\'ebiles. & Mantenibilidad, adecuaci\'on funcional. \\
+\texttt{errorprone} & Avisa de patrones con alta probabilidad de producir errores en ejecuci\'on. Es la categor\'ia m\'as cr\'itica. & Fiabilidad, seguridad. \\
+\texttt{multithreading} & Aunque el proyecto a\'un no usa hilos, se mantiene como red de seguridad ante futuras extensiones (motor de IA, temporizadores). & Fiabilidad, eficiencia de desempe\~no. \\
+\texttt{performance} & Detecta patrones ineficientes (creaci\'on innecesaria de objetos, bucles, etc.). & Eficiencia de desempe\~no. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+% =====================================================================
+\section{Secuencia de comandos ejecutados}
+% =====================================================================
+
+Todos los comandos se ejecutan desde la ra\'iz del proyecto.
+
+\begin{lstlisting}[language=bash,caption={Comandos de an\'alisis e inventariado del c\'odigo}]
+# Inventario y caracterizacion del codigo
+find src/main/java -name '*.java' -print
+wc -l $(find src/main/java -name '*.java')
+java -version
+./mvnw -version
+
+# Ciclo de Maven y analisis con PMD
+./mvnw test
+./mvnw verify
+./mvnw pmd:pmd        # genera target/pmd.xml
+./mvnw pmd:check      # falla la build si failOnViolation=true
+./mvnw site           # genera el informe HTML target/reports/pmd.html
+
+# Ejecucion de la aplicacion JavaFX (verificacion funcional)
+./mvnw javafx:run
+\end{lstlisting}
+
+\begin{center}
+\begin{tabularx}{\textwidth}{lX}
+\toprule
+\textbf{Comando} & \textbf{Resultado} \\
+\midrule
+\texttt{find src/main/java -name '*.java'} & Localiza 21 ficheros Java. \\
+\texttt{wc -l ...} & 1145 l\'ineas Java en total. \\
+\texttt{java -version} & OpenJDK 25.0.2. \\
+\texttt{./mvnw -version} & Apache Maven 3.8.5 sobre Java 25.0.2. \\
+\texttt{./mvnw test} & \texttt{BUILD SUCCESS}; sin tests definidos a\'un. \\
+\texttt{./mvnw verify} & \texttt{BUILD SUCCESS}; informe PMD generado. \\
+\texttt{./mvnw pmd:pmd} & Genera \texttt{target/pmd.xml}. \\
+\texttt{./mvnw site} & Genera \texttt{target/reports/pmd.html} navegable. \\
+\texttt{./mvnw javafx:run} & Lanza la ventana JavaFX (verificaci\'on visual). \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+% =====================================================================
+\section{Resultados obtenidos con PMD}
+% =====================================================================
+
+\subsection{Ficheros generados}
+
+\begin{center}
+\begin{tabularx}{\textwidth}{lX}
+\toprule
+\textbf{Fichero} & \textbf{Contenido} \\
+\midrule
+\texttt{target/pmd.xml} & Informe completo en formato XML. \\
+\texttt{target/reports/pmd.html} & Informe HTML navegable generado por \texttt{site}. \\
+\texttt{pmd-ruleset.xml} & Ruleset propio aplicado en el an\'alisis. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\subsection{Resumen num\'erico de las violaciones}
+
+PMD ha detectado un total de \textbf{46 violaciones} sobre los 14 ficheros Java incluidos
+en el alcance del an\'alisis (modelo + controlador, excluida la vista JavaFX).
+
+\begin{center}
+\begin{tabular}{lr}
+\toprule
+\textbf{Categor\'ia (ruleset)} & \textbf{N\'umero de violaciones} \\
+\midrule
+Code Style & 25 \\
+Error Prone & 20 \\
+Performance & 1 \\
+\midrule
+\textbf{Total} & \textbf{46} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tabular}{llr}
+\toprule
+\textbf{Regla} & \textbf{Categor\'ia} & \textbf{Ocurrencias} \\
+\midrule
+\texttt{LocalVariableCouldBeFinal} & Code Style & 23 \\
+\texttt{CompareObjectsWithEquals} & Error Prone & 15 \\
+\texttt{NullAssignment} & Error Prone & 4 \\
+\texttt{UnnecessaryConstructor} & Code Style & 2 \\
+\texttt{ConstructorCallsOverridableMethod} & Error Prone & 1 \\
+\texttt{AvoidInstantiatingObjectsInLoops} & Performance & 1 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Limitaci\'on observada del entorno}
+
+Durante la ejecuci\'on, PMD muestra trazas internas con el mensaje
+\texttt{Unsupported class file major version 69} cuando intenta resolver clases compiladas
+con OpenJDK 25 (versi\'on \texttt{major 69}). El proyecto se compila con Java 21, pero la
+JVM que ejecuta Maven es la 25, y PMD/ASM 9 no reconoce todav\'ia ese nivel de bytecode.
+Esta incidencia debe documentarse como una \textbf{limitaci\'on del entorno de an\'alisis},
+no como un defecto del c\'odigo: el informe de PMD se genera correctamente y todas las
+reglas evalu\'an el c\'odigo fuente.
+
+% =====================================================================
+\section{Listado e interpretaci\'on de los errores detectados}
+% =====================================================================
+
+A continuaci\'on se analiza un \textbf{ejemplo representativo de cada tipo} de violaci\'on
+detectada (las repetidas no se duplican). Para cada caso se describe el patr\'on, su nivel
+de importancia para la calidad del software y la caracter\'istica del modelo
+ISO/IEC~25010 con la que se relaciona principalmente.
+
+% ---------------------------------------------------------------------
+\subsection{Tipo 1: \texttt{ConstructorCallsOverridableMethod} (Error Prone, prioridad 1)}
+
+\textbf{Localizaci\'on:} \texttt{ControladorJuego.java}, l\'inea 27.
+
+\textbf{Mensaje PMD:} \emph{Overridable method called during object construction:
+ControladorJuego.reiniciarPartida()}.
+
+\textbf{C\'odigo afectado:}
+\begin{lstlisting}[language=Java]
+public ControladorJuego() {
+    this.tablero = new Tablero();
+    reiniciarPartida();   // <-- metodo no final, llamado desde el constructor
+}
+\end{lstlisting}
+
+\textbf{Descripci\'on:} llamar dentro del constructor a un m\'etodo que puede ser
+sobrescrito por una subclase es peligroso, porque la subclase a\'un no se ha inicializado
+cuando el m\'etodo se ejecuta. Esto puede dar lugar a estados parcialmente inicializados.
+
+\textbf{Importancia:} \textbf{alta} (prioridad 1 en PMD). Es un patr\'on cl\'asico de
+defectos sutiles dif\'iciles de depurar.
+
+\textbf{Caracter\'istica ISO/IEC~25010 relacionada:} \emph{Fiabilidad}
+(\textit{maturity}/\textit{fault tolerance}): el patr\'on aumenta la probabilidad de
+fallos en ejecuci\'on cuando se extiende la clase. Tambi\'en afecta a la
+\emph{Mantenibilidad} (\textit{modifiability}) porque limita la libertad de extender la
+clase sin riesgo.
+
+% ---------------------------------------------------------------------
+\subsection{Tipo 2: \texttt{CompareObjectsWithEquals} (Error Prone, prioridad 3)}
+
+\textbf{Localizaci\'on (ejemplo):} \texttt{Peon.java}, l\'inea 83 (y 14 ocurrencias m\'as).
+
+\textbf{Mensaje PMD:} \emph{Use equals() to compare object references}.
+
+\textbf{C\'odigo afectado:}
+\begin{lstlisting}[language=Java]
+return avanceFila == obtenerDireccion()
+        && avanceColumna == 1
+        && !destino.estaVacia()
+        && destino.getPiezaActual().getColor() != getColor();
+\end{lstlisting}
+
+\textbf{Descripci\'on:} se comparan referencias \texttt{ColorPieza} con \texttt{!=} en
+lugar de \texttt{!equals(...)}. En este caso concreto \texttt{ColorPieza} es un \texttt{enum}
+y la comparaci\'on con \texttt{==} es correcta y deseable, pero PMD no puede inferirlo en
+todos los casos y por seguridad recomienda \texttt{equals}. La regla obliga a justificar
+expl\'icitamente cada uso de \texttt{==} sobre objetos.
+
+\textbf{Importancia:} \textbf{media}. Aunque para enums el patr\'on es seguro, en otros
+tipos provocar\'ia errores funcionales (comparar dos \texttt{Casilla} distintas pero
+equivalentes, por ejemplo).
+
+\textbf{Caracter\'istica ISO/IEC~25010 relacionada:} \emph{Fiabilidad}
+(comparaciones err\'oneas conducen a comportamiento incorrecto) y \emph{Mantenibilidad}
+(\textit{analyzability}): el c\'odigo se vuelve fr\'agil ante refactorizaciones que
+sustituyan un \texttt{enum} por una clase normal.
+
+% ---------------------------------------------------------------------
+\subsection{Tipo 3: \texttt{NullAssignment} (Error Prone, prioridad 3)}
+
+\textbf{Localizaci\'on (ejemplo):} \texttt{ControladorJuego.java}, l\'inea 63.
+
+\textbf{Mensaje PMD:} \emph{Assigning an Object to null is a code smell. Consider refactoring}.
+
+\textbf{C\'odigo afectado:}
+\begin{lstlisting}[language=Java]
+public void reiniciarPartida() {
+    tablero.inicializarPiezas();
+    turnoActual = ColorPieza.BLANCO;
+    casillaSeleccionada = null;   // <-- asignacion a null
+}
+\end{lstlisting}
+
+\textbf{Descripci\'on:} asignar \texttt{null} a un campo se considera una se\~nal de
+modelado deficiente: idealmente el estado de \emph{``no hay selecci\'on''} se representa
+con un objeto \emph{Optional} o con un patr\'on \emph{Null Object}.
+
+\textbf{Importancia:} \textbf{baja-media}. Aqu\'i el uso es legible y est\'a controlado;
+pero introduce \texttt{null} en el resto del flujo y obliga a comprobaciones repartidas.
+
+\textbf{Caracter\'istica ISO/IEC~25010 relacionada:} \emph{Mantenibilidad}
+(\textit{analyzability} y \textit{modifiability}) y \emph{Fiabilidad}
+(\textit{fault tolerance}): el uso intensivo de \texttt{null} aumenta el riesgo de
+\texttt{NullPointerException} en futuras extensiones.
+
+% ---------------------------------------------------------------------
+\subsection{Tipo 4: \texttt{LocalVariableCouldBeFinal} (Code Style, prioridad 3)}
+
+\textbf{Localizaci\'on (ejemplo):} \texttt{Pieza.java}, l\'ineas 42--48 (y 22 ocurrencias m\'as).
+
+\textbf{Mensaje PMD:} \emph{Local variable `xxx' could be declared final}.
+
+\textbf{C\'odigo afectado:}
+\begin{lstlisting}[language=Java]
+int avanceFila = Integer.compare(destino.getFila(), origen.getFila());
+int avanceColumna = Integer.compare(destino.getColumna(), origen.getColumna());
+int filaActual = origen.getFila() + avanceFila;
+int columnaActual = origen.getColumna() + avanceColumna;
+\end{lstlisting}
+
+\textbf{Descripci\'on:} las dos primeras variables nunca se reasignan; podr\'ian
+declararse \texttt{final}. Marcar como \texttt{final} las variables locales documenta la
+inmutabilidad y previene reasignaciones accidentales durante futuras modificaciones.
+
+\textbf{Importancia:} \textbf{baja}. No es un defecto funcional, pero mejora la
+legibilidad y evita errores en evoluciones del c\'odigo.
+
+\textbf{Caracter\'istica ISO/IEC~25010 relacionada:} \emph{Mantenibilidad}
+(\textit{analyzability}, \textit{modifiability}): \texttt{final} hace expl\'icito el
+contrato de cada variable y reduce la carga cognitiva al leer el m\'etodo.
+
+% ---------------------------------------------------------------------
+\subsection{Tipo 5: \texttt{UnnecessaryConstructor} (Code Style, prioridad 3)}
+
+\textbf{Localizaci\'on (ejemplo):} \texttt{ControladorTablero.java}, l\'inea 15.
+
+\textbf{Mensaje PMD:} \emph{Avoid unnecessary constructors --- the compiler will generate
+these for you}.
+
+\textbf{C\'odigo afectado:}
+\begin{lstlisting}[language=Java]
+public class ControladorTablero {
+    public ControladorTablero() {
+        // constructor vacio que duplica al sintetizado por el compilador
+    }
+}
+\end{lstlisting}
+
+\textbf{Descripci\'on:} declarar un constructor vac\'io p\'ublico sin contenido es
+redundante: Java genera autom\'aticamente uno equivalente. El c\'odigo a\~nadido no
+aporta sem\'antica.
+
+\textbf{Importancia:} \textbf{baja}. Es ruido de c\'odigo (\textit{code noise}).
+
+\textbf{Caracter\'istica ISO/IEC~25010 relacionada:} \emph{Mantenibilidad}
+(\textit{analyzability}): cuanto m\'as breve y limpio sea el c\'odigo, m\'as r\'apido
+se entiende.
+
+% ---------------------------------------------------------------------
+\subsection{Tipo 6: \texttt{AvoidInstantiatingObjectsInLoops} (Performance, prioridad 3)}
+
+\textbf{Localizaci\'on:} \texttt{Tablero.java}, l\'inea 116.
+
+\textbf{Mensaje PMD:} \emph{Avoid instantiating new objects inside loops}.
+
+\textbf{C\'odigo afectado:}
+\begin{lstlisting}[language=Java]
+private void inicializarPeones(final ColorPieza color, final int fila) {
+    for (int columna = 0; columna < TAMANO_TABLERO; columna++) {
+        colocarPieza(fila, columna, new Peon(color));   // <-- new dentro del bucle
+    }
+}
+\end{lstlisting}
+
+\textbf{Descripci\'on:} se crea un objeto nuevo en cada iteraci\'on. En este caso es
+inevitable (cada casilla necesita su propia instancia de \texttt{Peon}), pero la regla
+sigue siendo \'util en c\'odigo donde el objeto pudiera reutilizarse.
+
+\textbf{Importancia:} \textbf{baja} en este contexto (se ejecuta una sola vez por
+partida). Ser\'ia \textbf{alta} en un motor de b\'usqueda de movimientos donde se
+genera el \'arbol de jugadas.
+
+\textbf{Caracter\'istica ISO/IEC~25010 relacionada:} \emph{Eficiencia de desempe\~no}
+(\textit{resource utilization}, \textit{time behaviour}): la creaci\'on excesiva de
+objetos presiona al recolector de basura y degrada el tiempo de respuesta cuando el
+n\'umero de iteraciones crece.
+
+% =====================================================================
+\section{Tabla resumen de defectos por caracter\'istica ISO/IEC 25010}
+% =====================================================================
+
+\begin{center}
+\begin{tabularx}{\textwidth}{l X l}
+\toprule
+\textbf{Regla detectada} & \textbf{Caracter\'istica ISO/IEC 25010 dominante} & \textbf{Severidad} \\
+\midrule
+\texttt{ConstructorCallsOverridableMethod} & Fiabilidad / Mantenibilidad & Alta \\
+\texttt{CompareObjectsWithEquals} & Fiabilidad / Mantenibilidad & Media \\
+\texttt{NullAssignment} & Mantenibilidad / Fiabilidad & Baja-Media \\
+\texttt{LocalVariableCouldBeFinal} & Mantenibilidad & Baja \\
+\texttt{UnnecessaryConstructor} & Mantenibilidad & Baja \\
+\texttt{AvoidInstantiatingObjectsInLoops} & Eficiencia de desempe\~no & Baja \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+% =====================================================================
+\section{Relaci\'on con la calidad del software seg\'un ISO/IEC 25000}
+% =====================================================================
+
+La familia ISO/IEC 25000 (SQuaRE) propone evaluar la calidad del producto software
+mediante ocho caracter\'isticas: \emph{adecuaci\'on funcional}, \emph{eficiencia de
+desempe\~no}, \emph{compatibilidad}, \emph{usabilidad}, \emph{fiabilidad},
+\emph{seguridad}, \emph{mantenibilidad} y \emph{portabilidad}. PMD aporta evidencia
+sobre todo en cuatro de ellas:
+
+\begin{center}
+\begin{tabularx}{\textwidth}{l X X}
+\toprule
+\textbf{Caracter\'istica} & \textbf{Aporte de PMD} & \textbf{Aplicaci\'on al proyecto ajedrez} \\
+\midrule
+Mantenibilidad & Detecta c\'odigo muerto, constructores innecesarios, variables que pueden ser \texttt{final}, estructuras duplicadas y patrones que dificultan la lectura. & Mejora la facilidad para revisar las clases de piezas y los controladores y para extenderlos a nuevas reglas (jaque, enroque, captura al paso). \\
+Fiabilidad & Identifica patrones propensos a fallos: comparaciones con \texttt{==} sobre objetos, \texttt{NullPointerException} potenciales, m\'etodos sobrescribibles desde el constructor. & Reduce la probabilidad de movimientos inv\'alidos, estados incoherentes del tablero y errores en el cambio de turno. \\
+Eficiencia de desempe\~no & Reglas como \texttt{AvoidInstantiatingObjectsInLoops} o las de tipo \texttt{Big*Instantiation} avisan sobre patrones costosos. & Hoy el impacto es bajo, pero ser\'a importante si se a\~nade IA, b\'usqueda de jugadas o validaci\'on masiva de partidas. \\
+Seguridad & Reglas como \texttt{AvoidUsingHardCodedIP} o \texttt{HardCodedCryptoKey} bloquean malas pr\'acticas. & Hoy el proyecto no maneja red ni credenciales, pero la cobertura preventiva sigue activa. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\textbf{Limitaciones del an\'alisis est\'atico:} ning\'un analizador est\'atico puede
+sustituir las pruebas funcionales. PMD no garantiza que la torre se mueva en l\'inea recta
+ni que el pe\'on capture en diagonal: solo asegura que el c\'odigo no presenta los
+patrones recogidos en sus reglas. La adecuaci\'on funcional debe verificarse con
+pruebas unitarias (JUnit) que se proponen como pr\'oxima mejora.
+
+% =====================================================================
+\section{Conclusiones}
+% =====================================================================
+
+PMD se ha integrado correctamente en el ciclo Maven del proyecto y se ha aplicado un
+ruleset propio que incluye seis categor\'ias oficiales (\texttt{bestpractices},
+\texttt{codestyle}, \texttt{design}, \texttt{errorprone}, \texttt{multithreading} y
+\texttt{performance}). El an\'alisis del 09/05/2026 sobre 21 archivos Java y 1145 l\'ineas
+ha generado los siguientes hallazgos principales:
+
+\begin{itemize}[leftmargin=1.4em]
+\item Se han detectado \textbf{46 violaciones} agrupadas en seis tipos de regla.
+\item El \'unico defecto de prioridad m\'axima (1) es la llamada al m\'etodo
+      sobrescribible \texttt{reiniciarPartida()} desde el constructor de
+      \texttt{ControladorJuego}; conviene marcar \texttt{ControladorJuego} como
+      \texttt{final} o el m\'etodo como \texttt{final}/\texttt{private} para evitarlo.
+\item La mayor\'ia de hallazgos (23 \texttt{LocalVariableCouldBeFinal} y 15
+      \texttt{CompareObjectsWithEquals}) son de baja severidad pero refuerzan la
+      mantenibilidad y la prevenci\'on de errores futuros si se aplican.
+\item El uso de \texttt{NullAssignment} sugiere migrar a \texttt{Optional<Casilla>}
+      para representar la ``casilla seleccionada''.
+\item La regla de \emph{performance} en \texttt{Tablero.inicializarPeones} es
+      tolerable porque se ejecuta una sola vez al iniciar la partida.
+\end{itemize}
+
+\textbf{Pr\'oximas mejoras sugeridas:}
+\begin{enumerate}[leftmargin=1.4em]
+\item A\~nadir tests JUnit para cada pieza (Torre, Alfil, Caballo, Pe\'on, Reina, Rey)
+      que verifiquen movimientos legales e ilegales y la captura.
+\item Marcar \texttt{ControladorJuego} como \texttt{final} y \texttt{reiniciarPartida}
+      como \texttt{private}, eliminando la violaci\'on de prioridad 1.
+\item Sustituir las asignaciones \texttt{= null} por \texttt{Optional<Casilla>}.
+\item Habilitar \texttt{failOnViolation=true} cuando el c\'odigo est\'e libre de
+      hallazgos cr\'iticos para integrar PMD como puerta de calidad en CI.
+\end{enumerate}
+
+% =====================================================================
+\section*{Anexo A: Evidencias de salida}
+\addcontentsline{toc}{section}{Anexo A: Evidencias de salida}
+% =====================================================================
+
+\begin{lstlisting}[caption={Salida resumida de \texttt{./mvnw verify}}]
+[INFO] BUILD SUCCESS
+[INFO] PMD Version: 7.7.0
+[INFO] Total time: ...
+\end{lstlisting}
+
+\begin{lstlisting}[language=XMLext,caption={Extracto del informe \texttt{target/pmd.xml}}]
+<pmd version="7.7.0" timestamp="2026-05-09T14:23:51.910">
+  <file name=".../ControladorJuego.java">
+    <violation beginline="27" rule="ConstructorCallsOverridableMethod"
+               ruleset="Error Prone" priority="1">
+      Overridable method called during object construction:
+      ControladorJuego.reiniciarPartida()
+    </violation>
+    <violation beginline="63" rule="NullAssignment"
+               ruleset="Error Prone" priority="3">
+      Assigning an Object to null is a code smell. Consider refactoring.
+    </violation>
+    ...
+  </file>
+  ...
+</pmd>
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Limitaci\'on del entorno (no es un defecto del c\'odigo)}]
+[WARNING] Unsupported class file major version 69
+\end{lstlisting}
+
+% =====================================================================
+\section*{Anexo B: Materiales y bibliograf\'ia}
+\addcontentsline{toc}{section}{Anexo B: Materiales y bibliograf\'ia}
+% =====================================================================
+
+\begin{itemize}[leftmargin=1.4em]
+\item PMD --- documentaci\'on oficial: \url{https://pmd.github.io/}
+\item Maven PMD Plugin --- p\'agina del proyecto: \url{https://maven.apache.org/plugins/maven-pmd-plugin/}
+\item ISO/IEC 25000 SQuaRE: \url{https://iso25000.com/}
+\item Javier Garz\'as --- herramientas de calidad: \url{https://www.javiergarzas.com/}
+\item BairesDev --- Java static code analysis tools: \url{https://www.bairesdev.com/blog/java-static-code-analysis-tools/}
+\end{itemize}
+
+\end{document}
