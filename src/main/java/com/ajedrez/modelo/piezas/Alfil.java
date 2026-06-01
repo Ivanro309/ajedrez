@@ -29,7 +29,7 @@ public class Alfil extends Pieza {
             return false;
         }
 
-        if (origen == destino || !esMovimientoDiagonal(origen, destino)) {
+        if (origen.equals(destino) || !esMovimientoDiagonal(origen, destino)) {
             return false;
         }
 
@@ -37,7 +37,7 @@ public class Alfil extends Pieza {
             return false;
         }
 
-        return destino.estaVacia() || destino.getPiezaActual().getColor() != getColor();
+        return destino.estaVacia() || !destino.getPiezaActual().getColor().equals(getColor());
     }
 
     /**
@@ -48,8 +48,8 @@ public class Alfil extends Pieza {
      * @return true si el movimiento es diagonal.
      */
     private boolean esMovimientoDiagonal(final Casilla origen, final Casilla destino) {
-        int diferenciaFilas = Math.abs(destino.getFila() - origen.getFila());
-        int diferenciaColumnas = Math.abs(destino.getColumna() - origen.getColumna());
+        final int diferenciaFilas = Math.abs(destino.getFila() - origen.getFila());
+        final int diferenciaColumnas = Math.abs(destino.getColumna() - origen.getColumna());
 
         return diferenciaFilas == diferenciaColumnas;
     }

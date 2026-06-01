@@ -29,7 +29,7 @@ public class Torre extends Pieza {
             return false;
         }
 
-        if (origen == destino || !esMovimientoRecto(origen, destino)) {
+        if (origen.equals(destino) || !esMovimientoRecto(origen, destino)) {
             return false;
         }
 
@@ -37,7 +37,7 @@ public class Torre extends Pieza {
             return false;
         }
 
-        return destino.estaVacia() || destino.getPiezaActual().getColor() != getColor();
+        return destino.estaVacia() || !destino.getPiezaActual().getColor().equals(getColor());
     }
 
     /**

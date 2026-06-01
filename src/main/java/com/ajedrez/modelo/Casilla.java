@@ -19,7 +19,6 @@ public class Casilla {
     public Casilla(final int fila, final int columna) {
         this.fila = fila;
         this.columna = columna;
-        this.piezaActual = null;
     }
 
     /**

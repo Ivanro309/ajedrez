@@ -29,25 +29,25 @@ public class Rey extends Pieza {
             return false;
         }
 
-        if (origen == destino) {
+        if (origen.equals(destino)) {
             return false;
         }
 
-        boolean esDestinoValido = destino.estaVacia() || !destino.getPiezaActual().getColor().equals(getColor());
+        final boolean esDestinoValido = destino.estaVacia() || !destino.getPiezaActual().getColor().equals(getColor());
 
         if (esMovimientoDeRey(origen, destino)) {
             return esDestinoValido;
         }
 
         // Enroque (Castling)
-        int diferenciaFilas = Math.abs(destino.getFila() - origen.getFila());
-        int diferenciaColumnas = Math.abs(destino.getColumna() - origen.getColumna());
+        final int diferenciaFilas = Math.abs(destino.getFila() - origen.getFila());
+        final int diferenciaColumnas = Math.abs(destino.getColumna() - origen.getColumna());
 
         if (diferenciaFilas == 0 && diferenciaColumnas == 2 && !this.haMovido()) {
             if (destino.getColumna() == 6) { // Enroque corto
-                Casilla torreCasilla = tablero.obtenerCasilla(origen.getFila(), 7);
+                final Casilla torreCasilla = tablero.obtenerCasilla(origen.getFila(), 7);
                 if (torreCasilla != null && !torreCasilla.estaVacia() && torreCasilla.getPiezaActual() instanceof Torre) {
-                    Pieza torre = torreCasilla.getPiezaActual();
+                    final Pieza torre = torreCasilla.getPiezaActual();
                     if (!torre.haMovido() && torre.getColor().equals(this.getColor())) {
                         if (tablero.obtenerCasilla(origen.getFila(), 5).estaVacia() && tablero.obtenerCasilla(origen.getFila(), 6).estaVacia()) {
                             return true;
@@ -55,9 +55,9 @@ public class Rey extends Pieza {
                     }
                 }
             } else if (destino.getColumna() == 2) { // Enroque largo
-                Casilla torreCasilla = tablero.obtenerCasilla(origen.getFila(), 0);
+                final Casilla torreCasilla = tablero.obtenerCasilla(origen.getFila(), 0);
                 if (torreCasilla != null && !torreCasilla.estaVacia() && torreCasilla.getPiezaActual() instanceof Torre) {
-                    Pieza torre = torreCasilla.getPiezaActual();
+                    final Pieza torre = torreCasilla.getPiezaActual();
                     if (!torre.haMovido() && torre.getColor().equals(this.getColor())) {
                         if (tablero.obtenerCasilla(origen.getFila(), 1).estaVacia() && 
                             tablero.obtenerCasilla(origen.getFila(), 2).estaVacia() && 
@@ -80,8 +80,8 @@ public class Rey extends Pieza {
      * @return true si el desplazamiento es valido para un rey.
      */
     private boolean esMovimientoDeRey(final Casilla origen, final Casilla destino) {
-        int diferenciaFilas = Math.abs(destino.getFila() - origen.getFila());
-        int diferenciaColumnas = Math.abs(destino.getColumna() - origen.getColumna());
+        final int diferenciaFilas = Math.abs(destino.getFila() - origen.getFila());
+        final int diferenciaColumnas = Math.abs(destino.getColumna() - origen.getColumna());
 
         return diferenciaFilas <= 1 && diferenciaColumnas <= 1;
     }

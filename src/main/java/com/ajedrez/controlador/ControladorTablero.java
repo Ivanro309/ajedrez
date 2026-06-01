@@ -16,12 +16,6 @@ public class ControladorTablero {
     private Tablero tablero;
     private VistaTablero vista;
 
-    /**
-     * Crea un controlador de tablero sin vista ni modelo asociados todavia.
-     */
-    public ControladorTablero() {
-        // PMD prefiere evitar this.tablero = null;
-    }
 
     /**
      * Devuelve el tablero asociado.

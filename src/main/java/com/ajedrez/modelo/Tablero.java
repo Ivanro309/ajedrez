@@ -60,7 +60,7 @@ public class Tablero {
      * @param pieza pieza que se desea colocar, o null para vaciar la casilla.
      */
     public void colocarPieza(final int fila, final int columna, final Pieza pieza) {
-        Casilla casilla = obtenerCasilla(fila, columna);
+        final Casilla casilla = obtenerCasilla(fila, columna);
         if (casilla != null) {
             casilla.setPiezaActual(pieza);
         }
@@ -101,7 +101,7 @@ public class Tablero {
             return false;
         }
 
-        Pieza pieza = origen.getPiezaActual();
+        final Pieza pieza = origen.getPiezaActual();
         if (!pieza.esMovimientoValido(origen, destino, this)) {
             return false;
         }
@@ -112,6 +112,7 @@ public class Tablero {
         return true;
     }
 
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     private void inicializarPeones(final ColorPieza color, final int fila) {
         for (int columna = 0; columna < TAMANO_TABLERO; columna++) {
             colocarPieza(fila, columna, new Peon(color));

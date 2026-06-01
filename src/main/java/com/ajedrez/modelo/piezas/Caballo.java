@@ -29,11 +29,11 @@ public class Caballo extends Pieza {
             return false;
         }
 
-        if (origen == destino || !esMovimientoCaballo(origen, destino)) {
+        if (origen.equals(destino) || !esMovimientoCaballo(origen, destino)) {
             return false;
         }
 
-        return destino.estaVacia() || destino.getPiezaActual().getColor() != getColor();
+        return destino.estaVacia() || !destino.getPiezaActual().getColor().equals(getColor());
     }
 
     /**
@@ -44,8 +44,8 @@ public class Caballo extends Pieza {
      * @return true si el movimiento tiene forma de L.
      */
     private boolean esMovimientoCaballo(final Casilla origen, final Casilla destino) {
-        int diferenciaFilas = Math.abs(destino.getFila() - origen.getFila());
-        int diferenciaColumnas = Math.abs(destino.getColumna() - origen.getColumna());
+        final int diferenciaFilas = Math.abs(destino.getFila() - origen.getFila());
+        final int diferenciaColumnas = Math.abs(destino.getColumna() - origen.getColumna());
 
         return diferenciaFilas == 2 && diferenciaColumnas == 1
                 || diferenciaFilas == 1 && diferenciaColumnas == 2;

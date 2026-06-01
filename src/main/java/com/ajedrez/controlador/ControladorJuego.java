@@ -6,6 +6,7 @@ import com.ajedrez.modelo.EstadoJuego;
 import com.ajedrez.modelo.Pieza;
 import com.ajedrez.modelo.Tablero;
 import com.ajedrez.modelo.piezas.Rey;
+import java.util.Optional;
 
 /**
  * Controlador principal del flujo de una partida de ajedrez.
@@ -17,7 +18,7 @@ public class ControladorJuego {
 
     private final Tablero tablero;
     private final EstadoJuego estado;
-    private Casilla casillaSeleccionada;
+    private Optional<Casilla> casillaSeleccionada;
 
     /**
      * Crea un controlador de juego con un tablero y estado en posicion inicial.
@@ -25,6 +26,7 @@ public class ControladorJuego {
     public ControladorJuego() {
         this.tablero = new Tablero();
         this.estado = new EstadoJuego();
+        this.casillaSeleccionada = Optional.empty();
         reiniciarPartida();
     }
 
@@ -61,7 +63,7 @@ public class ControladorJuego {
      * @return casilla seleccionada, o null si no hay seleccion.
      */
     public Casilla getCasillaSeleccionada() {
-        return casillaSeleccionada;
+        return casillaSeleccionada.orElse(null);
     }
 
     /**
@@ -74,7 +76,7 @@ public class ControladorJuego {
         estado.setJaqueMate(false);
         estado.setTablas(false);
         estado.setFinalizada(false);
-        casillaSeleccionada = null;
+        casillaSeleccionada = Optional.empty();
     }
 
     /**
@@ -94,7 +96,7 @@ public class ControladorJuego {
             return ResultadoMovimiento.error("Casilla fuera del tablero.");
         }
 
-        if (casillaSeleccionada == null) {
+        if (casillaSeleccionada.isEmpty()) {
             return seleccionarOrigen(casilla);
         }
 
@@ -117,7 +119,7 @@ public class ControladorJuego {
             return ResultadoMovimiento.error("Es el turno de " + textoColor(estado.getTurnoActual()) + ".");
         }
 
-        casillaSeleccionada = casilla;
+        casillaSeleccionada = Optional.of(casilla);
         return ResultadoMovimiento.seleccion("Origen seleccionado. Elige destino.");
     }
 
@@ -128,73 +130,79 @@ public class ControladorJuego {
      * @return resultado del intento de movimiento.
      */
     private ResultadoMovimiento moverDesdeSeleccion(final Casilla destino) {
-        if (destino == casillaSeleccionada) {
-            casillaSeleccionada = null;
+        if (casillaSeleccionada.isEmpty()) {
+            return ResultadoMovimiento.error("No hay casilla seleccionada.");
+        }
+
+        final Casilla seleccion = casillaSeleccionada.get();
+
+        if (destino.equals(seleccion)) {
+            casillaSeleccionada = Optional.empty();
             return ResultadoMovimiento.seleccion("Seleccion cancelada.");
         }
 
         if (!destino.estaVacia() && destino.getPiezaActual().getColor().equals(estado.getTurnoActual())) {
-            casillaSeleccionada = destino;
+            casillaSeleccionada = Optional.of(destino);
             return ResultadoMovimiento.seleccion("Origen cambiado. Elige destino.");
         }
 
-        final Pieza pieza = casillaSeleccionada.getPiezaActual();
-        if (!pieza.esMovimientoValido(casillaSeleccionada, destino, tablero)) {
+        final Pieza pieza = seleccion.getPiezaActual();
+        if (!pieza.esMovimientoValido(seleccion, destino, tablero)) {
             return ResultadoMovimiento.error("Movimiento no valido para esa pieza.");
         }
 
-        if (pieza instanceof com.ajedrez.modelo.piezas.Rey && Math.abs(destino.getColumna() - casillaSeleccionada.getColumna()) == 2) {
-            // Verificar que no está en jaque ni pasa por jaque
+        if (pieza instanceof Rey && Math.abs(destino.getColumna() - seleccion.getColumna()) == 2) {
+            // Verificar que no esta en jaque ni pasa por jaque
             if (estado.isJaque()) {
                 return ResultadoMovimiento.error("No puedes enrocar estando en jaque.");
             }
-            int direccion = destino.getColumna() > casillaSeleccionada.getColumna() ? 1 : -1;
-            Casilla intermedia = tablero.obtenerCasilla(destino.getFila(), casillaSeleccionada.getColumna() + direccion);
-            if (movimientoDejaEnJaque(casillaSeleccionada, intermedia, estado.getTurnoActual())) {
-                return ResultadoMovimiento.error("No puedes enrocar a través de una casilla atacada.");
+            final int direccion = destino.getColumna() > seleccion.getColumna() ? 1 : -1;
+            final Casilla intermedia = tablero.obtenerCasilla(destino.getFila(), seleccion.getColumna() + direccion);
+            if (movimientoDejaEnJaque(seleccion, intermedia, estado.getTurnoActual())) {
+                return ResultadoMovimiento.error("No puedes enrocar a traves de una casilla atacada.");
             }
-            if (movimientoDejaEnJaque(casillaSeleccionada, destino, estado.getTurnoActual())) {
-                return ResultadoMovimiento.error("No puedes enrocar si la casilla de destino está bajo ataque.");
+            if (movimientoDejaEnJaque(seleccion, destino, estado.getTurnoActual())) {
+                return ResultadoMovimiento.error("No puedes enrocar si la casilla de destino esta bajo ataque.");
             }
         } else {
-            if (movimientoDejaEnJaque(casillaSeleccionada, destino, estado.getTurnoActual())) {
+            if (movimientoDejaEnJaque(seleccion, destino, estado.getTurnoActual())) {
                 return ResultadoMovimiento.error("Movimiento invalido: dejas a tu rey en jaque.");
             }
         }
 
-        int diferenciaColumnas = destino.getColumna() - casillaSeleccionada.getColumna();
-        tablero.moverPieza(casillaSeleccionada, destino);
+        final int diferenciaColumnas = destino.getColumna() - seleccion.getColumna();
+        tablero.moverPieza(seleccion, destino);
         
         // Mover la torre si es un enroque
-        if (pieza instanceof com.ajedrez.modelo.piezas.Rey && Math.abs(diferenciaColumnas) == 2) {
+        if (pieza instanceof Rey && Math.abs(diferenciaColumnas) == 2) {
             if (diferenciaColumnas > 0) { // Corto
-                Casilla origenTorre = tablero.obtenerCasilla(destino.getFila(), 7);
-                Casilla destinoTorre = tablero.obtenerCasilla(destino.getFila(), 5);
+                final Casilla origenTorre = tablero.obtenerCasilla(destino.getFila(), 7);
+                final Casilla destinoTorre = tablero.obtenerCasilla(destino.getFila(), 5);
                 tablero.moverPieza(origenTorre, destinoTorre);
             } else { // Largo
-                Casilla origenTorre = tablero.obtenerCasilla(destino.getFila(), 0);
-                Casilla destinoTorre = tablero.obtenerCasilla(destino.getFila(), 3);
+                final Casilla origenTorre = tablero.obtenerCasilla(destino.getFila(), 0);
+                final Casilla destinoTorre = tablero.obtenerCasilla(destino.getFila(), 3);
                 tablero.moverPieza(origenTorre, destinoTorre);
             }
         }
         estado.cambiarTurno();
-        casillaSeleccionada = null;
+        casillaSeleccionada = Optional.empty();
 
         return recalcularEstado();
     }
 
     /**
-     * Promociona un peón en la casilla indicada a una nueva pieza.
+     * Promociona un peon en la casilla indicada a una nueva pieza.
      *
      * @param fila fila de la casilla.
      * @param columna columna de la casilla.
      * @param tipoPieza tipo de pieza a crear (Reina, Torre, Alfil, Caballo).
      */
-    public void promocionarPeon(int fila, int columna, String tipoPieza) {
-        Casilla casilla = tablero.obtenerCasilla(fila, columna);
+    public void promocionarPeon(final int fila, final int columna, final String tipoPieza) {
+        final Casilla casilla = tablero.obtenerCasilla(fila, columna);
         if (casilla != null && !casilla.estaVacia() && casilla.getPiezaActual() instanceof com.ajedrez.modelo.piezas.Peon) {
-            ColorPieza color = casilla.getPiezaActual().getColor();
-            Pieza nuevaPieza;
+            final ColorPieza color = casilla.getPiezaActual().getColor();
+            final Pieza nuevaPieza;
             switch (tipoPieza) {
                 case "Caballo" -> nuevaPieza = new com.ajedrez.modelo.piezas.Caballo(color);
                 case "Torre" -> nuevaPieza = new com.ajedrez.modelo.piezas.Torre(color);

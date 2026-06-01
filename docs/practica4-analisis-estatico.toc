@@ -1,25 +1,21 @@
 \babel@toc {spanish}{}\relax 
-\contentsline {section}{\numberline {1}Objetivo de la pr\'actica}{3}{section.1}%
-\contentsline {section}{\numberline {2}Descripci\'on del c\'odigo Java evaluado}{3}{section.2}%
-\contentsline {subsection}{\numberline {2.1}Distribuci\'on por paquetes}{3}{subsection.2.1}%
-\contentsline {subsection}{\numberline {2.2}Trabajo de c\'odigo realizado antes del an\'alisis}{4}{subsection.2.2}%
-\contentsline {section}{\numberline {3}Instalaci\'on y configuraci\'on de PMD}{4}{section.3}%
-\contentsline {section}{\numberline {4}Reglas utilizadas y justificaci\'on}{5}{section.4}%
-\contentsline {subsection}{\numberline {4.1}Categor\'ias seleccionadas y justificaci\'on}{6}{subsection.4.1}%
+\contentsline {section}{\numberline {1}Objetivo de la práctica}{3}{section.1}%
+\contentsline {section}{\numberline {2}Descripción del código Java evaluado}{3}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Lógica de negocio e interfaz de usuario implementadas}{4}{subsection.2.1}%
+\contentsline {section}{\numberline {3}Instalación y configuración de PMD}{5}{section.3}%
+\contentsline {section}{\numberline {4}Reglas utilizadas y justificación}{5}{section.4}%
 \contentsline {section}{\numberline {5}Secuencia de comandos ejecutados}{6}{section.5}%
-\contentsline {section}{\numberline {6}Resultados obtenidos con PMD}{7}{section.6}%
-\contentsline {subsection}{\numberline {6.1}Ficheros generados}{7}{subsection.6.1}%
-\contentsline {subsection}{\numberline {6.2}Resumen num\'erico de las violaciones}{7}{subsection.6.2}%
-\contentsline {subsection}{\numberline {6.3}Limitaci\'on observada del entorno}{7}{subsection.6.3}%
-\contentsline {section}{\numberline {7}Listado e interpretaci\'on de los errores detectados}{8}{section.7}%
-\contentsline {subsection}{\numberline {7.1}Tipo 1: \texttt {ConstructorCallsOverridableMethod} (Error Prone, prioridad 1)}{8}{subsection.7.1}%
-\contentsline {subsection}{\numberline {7.2}Tipo 2: \texttt {CompareObjectsWithEquals} (Error Prone, prioridad 3)}{8}{subsection.7.2}%
-\contentsline {subsection}{\numberline {7.3}Tipo 3: \texttt {NullAssignment} (Error Prone, prioridad 3)}{9}{subsection.7.3}%
-\contentsline {subsection}{\numberline {7.4}Tipo 4: \texttt {LocalVariableCouldBeFinal} (Code Style, prioridad 3)}{9}{subsection.7.4}%
-\contentsline {subsection}{\numberline {7.5}Tipo 5: \texttt {UnnecessaryConstructor} (Code Style, prioridad 3)}{9}{subsection.7.5}%
-\contentsline {subsection}{\numberline {7.6}Tipo 6: \texttt {AvoidInstantiatingObjectsInLoops} (Performance, prioridad 3)}{10}{subsection.7.6}%
-\contentsline {section}{\numberline {8}Tabla resumen de defectos por caracter\'istica ISO/IEC 25010}{11}{section.8}%
-\contentsline {section}{\numberline {9}Relaci\'on con la calidad del software seg\'un ISO/IEC 25000}{11}{section.9}%
-\contentsline {section}{\numberline {10}Conclusiones}{12}{section.10}%
-\contentsline {section}{Anexo A: Evidencias de salida}{12}{Item.4}%
-\contentsline {section}{Anexo B: Materiales y bibliograf\'ia}{13}{lstnumber.6.1}%
+\contentsline {section}{\numberline {6}Resultados obtenidos con PMD y Referencia a los Reportes del Programa}{7}{section.6}%
+\contentsline {subsection}{\numberline {6.1}El Reporte Estructurado XML: target/pmd-original.xml}{7}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}El Reporte Interactivo HTML: target/reports/pmd-original.html}{8}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}Resumen de las violaciones detectadas}{8}{subsection.6.3}%
+\contentsline {section}{\numberline {7}Listado e interpretación de los errores detectados}{8}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Ficha de Violación: NullAssignment (Error Prone)}{9}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Ficha de Violación: CompareObjectsWithEquals (Error Prone)}{9}{subsection.7.2}%
+\contentsline {subsection}{\numberline {7.3}Ficha de Violación: LocalVariableCouldBeFinal (Code Style)}{10}{subsection.7.3}%
+\contentsline {subsection}{\numberline {7.4}Ficha de Violación: UnnecessaryConstructor (Code Style)}{10}{subsection.7.4}%
+\contentsline {subsection}{\numberline {7.5}Ficha de Violación: AvoidInstantiatingObjectsInLoops (Performance)}{11}{subsection.7.5}%
+\contentsline {section}{\numberline {8}Relación con la calidad del software según ISO/IEC 25000}{11}{section.8}%
+\contentsline {section}{\numberline {9}Conclusiones y resolución de hallazgos}{12}{section.9}%
+\contentsline {section}{Anexo A: Evidencias de salida}{14}{Item.4}%
+\contentsline {section}{Anexo B: Materiales y bibliografía}{14}{lstnumber.2.8}%

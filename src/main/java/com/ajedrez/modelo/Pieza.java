@@ -23,7 +23,7 @@ public abstract class Pieza {
         return haMovido;
     }
 
-    public void setHaMovido(boolean haMovido) {
+    public void setHaMovido(final boolean haMovido) {
         this.haMovido = haMovido;
     }
 
@@ -49,13 +49,13 @@ public abstract class Pieza {
      * @return true si todas las casillas intermedias estan libres.
      */
     protected boolean caminoEstaLibre(final Casilla origen, final Casilla destino, final Tablero tablero) {
-        int avanceFila = Integer.compare(destino.getFila(), origen.getFila());
-        int avanceColumna = Integer.compare(destino.getColumna(), origen.getColumna());
+        final int avanceFila = Integer.compare(destino.getFila(), origen.getFila());
+        final int avanceColumna = Integer.compare(destino.getColumna(), origen.getColumna());
         int filaActual = origen.getFila() + avanceFila;
         int columnaActual = origen.getColumna() + avanceColumna;
 
         while (filaActual != destino.getFila() || columnaActual != destino.getColumna()) {
-            Casilla casillaIntermedia = tablero.obtenerCasilla(filaActual, columnaActual);
+            final Casilla casillaIntermedia = tablero.obtenerCasilla(filaActual, columnaActual);
             if (casillaIntermedia == null || !casillaIntermedia.estaVacia()) {
                 return false;
             }

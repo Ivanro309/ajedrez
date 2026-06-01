@@ -29,7 +29,7 @@ public class Reina extends Pieza {
             return false;
         }
 
-        if (origen == destino || !esMovimientoDeReina(origen, destino)) {
+        if (origen.equals(destino) || !esMovimientoDeReina(origen, destino)) {
             return false;
         }
 
@@ -37,7 +37,7 @@ public class Reina extends Pieza {
             return false;
         }
 
-        return destino.estaVacia() || destino.getPiezaActual().getColor() != getColor();
+        return destino.estaVacia() || !destino.getPiezaActual().getColor().equals(getColor());
     }
 
     /**
@@ -48,11 +48,11 @@ public class Reina extends Pieza {
      * @return true si el movimiento es recto o diagonal.
      */
     private boolean esMovimientoDeReina(final Casilla origen, final Casilla destino) {
-        int diferenciaFilas = Math.abs(destino.getFila() - origen.getFila());
-        int diferenciaColumnas = Math.abs(destino.getColumna() - origen.getColumna());
-        boolean movimientoRecto = origen.getFila() == destino.getFila()
+        final int diferenciaFilas = Math.abs(destino.getFila() - origen.getFila());
+        final int diferenciaColumnas = Math.abs(destino.getColumna() - origen.getColumna());
+        final boolean movimientoRecto = origen.getFila() == destino.getFila()
                 || origen.getColumna() == destino.getColumna();
-        boolean movimientoDiagonal = diferenciaFilas == diferenciaColumnas;
+        final boolean movimientoDiagonal = diferenciaFilas == diferenciaColumnas;
 
         return movimientoRecto || movimientoDiagonal;
     }

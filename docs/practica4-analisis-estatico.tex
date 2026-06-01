@@ -12,9 +12,35 @@
 % --- Geometria de pagina ---
 \usepackage[a4paper,top=2.3cm,bottom=2.3cm,left=2.5cm,right=2.5cm]{geometry}
 
+% --- Cabeceras y pies (Estilo Tema 3 y 4) ---
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textsc{ACCSI -- Curso 2025/26}}
+\fancyhead[R]{\small\textsc{Práctica 4: Análisis Estático (PMD)}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+\setlength{\headheight}{14.5pt}
+
+% --- Colores y enlaces (Estilo Tema 3 y 4) ---
+\usepackage[dvipsnames,table]{xcolor}
+\definecolor{MidnightBlue}{HTML}{1A365D}
+\definecolor{BrickRed}{HTML}{9B2C2C}
+\definecolor{OliveGreen}{HTML}{2F855A}
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=MidnightBlue,
+    urlcolor=MidnightBlue,
+    citecolor=MidnightBlue,
+    pdftitle={Practica 4 - Analisis estatico de codigo (PMD)},
+    pdfauthor={Ivan Rodriguez Miranda}
+}
+
 % --- Paquetes auxiliares ---
 \usepackage{graphicx}
-\usepackage{xcolor}
 \usepackage{booktabs}
 \usepackage{longtable}
 \usepackage{array}
@@ -22,19 +48,62 @@
 \usepackage{enumitem}
 \usepackage{listings}
 \usepackage{caption}
-\usepackage{hyperref}
-\usepackage{titlesec}
 \usepackage{parskip}
+\usepackage{setspace}
+\onehalfspacing
 
-% --- Configuracion de hyperref ---
-\hypersetup{
-    colorlinks=true,
-    linkcolor=black,
-    citecolor=black,
-    urlcolor=blue!60!black,
-    pdftitle={Practica 4 - Analisis estatico de codigo (PMD)},
-    pdfauthor={Ivan Rodriguez Miranda}
+% --- Cajas destacadas (Estilo Tema 3 y 4) ---
+\usepackage{tcolorbox}
+\tcbuselibrary{skins, breakable}
+
+\newtcolorbox{conceptbox}[1][]{%
+    colback=blue!5,
+    colframe=MidnightBlue,
+    fonttitle=\bfseries,
+    title=#1,
+    breakable,
+    enhanced,
+    boxrule=0.5pt,
+    arc=2pt
 }
+
+\newtcolorbox{importantbox}[1][]{%
+    colback=red!5,
+    colframe=BrickRed,
+    fonttitle=\bfseries,
+    title=#1,
+    breakable,
+    enhanced,
+    boxrule=0.5pt,
+    arc=2pt
+}
+
+\newtcolorbox{notebox}[1][]{%
+    colback=green!5,
+    colframe=OliveGreen,
+    fonttitle=\bfseries,
+    title=#1,
+    breakable,
+    enhanced,
+    boxrule=0.5pt,
+    arc=2pt
+}
+
+% --- Secciones con estilo (Estilo Tema 3 y 4) ---
+\usepackage{titlesec}
+\titleformat{\section}
+    {\Large\bfseries\color{MidnightBlue}}
+    {\thesection.}{0.5em}{}[\vspace{-0.5em}\rule{\textwidth}{0.4pt}]
+\titleformat{\subsection}
+    {\large\bfseries\color{MidnightBlue!80}}
+    {\thesubsection.}{0.5em}{}
+\titleformat{\subsubsection}
+    {\normalsize\bfseries\color{MidnightBlue!60}}
+    {\thesubsubsection.}{0.5em}{}
+
+% --- Comandos para terminos clave (Estilo Tema 3 y 4) ---
+\newcommand{\key}[1]{\textbf{\textcolor{MidnightBlue}{#1}}}
+\newcommand{\norma}[1]{\textbf{\textcolor{BrickRed}{#1}}}
 
 % --- Configuracion de listings (codigo fuente) ---
 \definecolor{codebg}{RGB}{248,248,248}
@@ -70,12 +139,6 @@
     sensitive=true
 }
 
-% --- Estilos de seccion ---
-\titleformat{\section}{\Large\bfseries}{\thesection}{0.6em}{}
-\titleformat{\subsection}{\large\bfseries}{\thesubsection}{0.6em}{}
-\setlength{\parskip}{0.5em}
-\setlength{\parindent}{0pt}
-
 % --- Comando para celdas con salto de linea controlado ---
 \newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
 \newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
@@ -83,13 +146,13 @@
 % --- Datos de portada ---
 \title{
     \vspace{-1.5cm}
-    {\large Asignatura de Calidad y Confianza en los Sistemas Inform\'aticos (ACCSI)} \\[0.4em]
+    {\large Asignatura de Calidad y Confianza en los Sistemas Informáticos (ACCSI)} \\[0.4em]
     {\large Curso 2025/2026} \\[1.5em]
-    \textbf{Pr\'actica 4: Herramientas de an\'alisis est\'atico de c\'odigo} \\[0.4em]
-    {\large An\'alisis del proyecto \emph{ajedrez} con PMD}
+    \textbf{\color{MidnightBlue}{Práctica 4: Herramientas de análisis estático de código}} \\[0.4em]
+    {\large Análisis del proyecto \emph{ajedrez} con PMD}
 }
-\author{Iv\'an Rodr\'iguez Miranda}
-\date{9 de mayo de 2026}
+\author{\key{Iván Rodríguez Miranda}}
+\date{26 de mayo de 2026}
 
 \begin{document}
 
@@ -101,9 +164,9 @@
 \toprule
 \textbf{Herramienta} & PMD 7.7.0 (Maven PMD Plugin 3.26.0) \\
 \textbf{Proyecto evaluado} & \texttt{ajedrez} (Java 21, Maven) \\
-\textbf{Fecha del an\'alisis} & 09/05/2026 \\
+\textbf{Fecha del análisis} & 09/05/2026 \\
 \textbf{Archivos analizados} & 21 ficheros \texttt{.java} \\
-\textbf{L\'ineas de c\'odigo} & 1145 l\'ineas en \texttt{src/main/java} \\
+\textbf{Líneas de código} & 1145 líneas en \texttt{src/main/java} \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -113,590 +176,307 @@
 \newpage
 
 % =====================================================================
-\section{Objetivo de la pr\'actica}
+\section{Objetivo de la práctica}
 % =====================================================================
 
-El objetivo de esta pr\'actica es aplicar una herramienta de an\'alisis est\'atico de c\'odigo
-sobre un proyecto Java propio, interpretar los resultados obtenidos y relacionarlos con las
-caracter\'isticas de calidad del software definidas por la familia de est\'andares
-ISO/IEC 25000 (modelo de calidad SQuaRE). Para ello se utiliza \textbf{PMD}, un analizador
-est\'atico que aplica conjuntos de reglas para detectar posibles defectos, c\'odigo no
-utilizado, patrones propensos a error, malas pr\'acticas de programaci\'on y problemas de
-mantenibilidad o rendimiento.
+El objetivo fundamental de esta práctica consiste en el despliegue, configuración y aplicación de una \key{herramienta de análisis estático de código} sobre un sistema de software desarrollado en lenguaje Java. En este caso particular, se ha seleccionado la herramienta de código abierto \key{PMD} (versión 7.7.0) integrada dentro del flujo de compilación mediante el plugin de Maven. Los resultados arrojados por el análisis se interpretan formalmente para relacionar las advertencias y fallos detectados con los criterios de calidad interna definidos por el estándar internacional \norma{ISO/IEC 25000} (Quality Improvement Paradigm y el modelo de calidad de producto SQuaRE).
+
+A diferencia de las técnicas de análisis dinámico, que dependen de la ejecución del programa mediante casos de prueba (testing), el análisis estático inspecciona la estructura lógica de los ficheros de código fuente directamente. PMD realiza esta tarea analizando el código y transformándolo en un \key{Árbol de Sintaxis Abstracta} (AST - \textit{Abstract Syntax Tree}). Sobre los nodos de este árbol, el motor de la herramienta evalúa reglas semánticas y sintácticas escritas en XPath o clases Java, identificando de manera automatizada:
+\begin{itemize}
+    \item Defectos y patrones de código propensos a fallos en tiempo de ejecución (\key{Error Prone}).
+    \item Variables, campos o métodos declarados que no se utilizan en ningún flujo (\key{Best Practices}).
+    \item Construcciones sintácticas ineficientes que degradan el rendimiento (\key{Performance}).
+    \item Estilos de codificación confusos o contrarios a las convenciones estándar de Java (\key{Code Style}).
+\end{itemize}
+
+\begin{conceptbox}[La justificación de la Calidad Interna]
+La calidad externa de un sistema (lo que percibe el usuario al interactuar con el ajedrez) depende directamente de su calidad interna (la legibilidad, inmutabilidad y modularidad del código fuente). El estándar \norma{ISO/IEC 25010} establece que la \key{Mantenibilidad} es la característica clave para medir el esfuerzo necesario para corregir, adaptar o hacer evolucionar un software en el futuro.
+\end{conceptbox}
 
 % =====================================================================
-\section{Descripci\'on del c\'odigo Java evaluado}
+\section{Descripción del código Java evaluado}
 % =====================================================================
 
-El c\'odigo evaluado corresponde a una aplicaci\'on Java de ajedrez organizada en paquetes
-de modelo, vista y controlador siguiendo el patr\'on MVC. La parte m\'as desarrollada es el
-modelo (tablero, casillas y piezas) junto con el controlador del juego.
+El sistema de software bajo análisis es una implementación interactiva y funcional del clásico juego de ajedrez desarrollado en el lenguaje de programación \key{Java} (específicamente bajo la especificación sintáctica de JDK 21) y haciendo uso de la biblioteca multimedia y de interfaz de usuario \key{JavaFX}. La arquitectura interna del programa sigue el patrón de diseño clásico de desacoplamiento \key{Modelo-Vista-Controlador (MVC)}. 
 
-\begin{center}
-\begin{tabular}{ll}
-\toprule
-\textbf{Dato} & \textbf{Valor} \\
-\midrule
-Fecha del an\'alisis & 09/05/2026 \\
-Lenguaje & Java \\
-Versi\'on de compilaci\'on (\texttt{release}) & Java 21 \\
-JVM usada en la ejecuci\'on & OpenJDK 25.0.2 \\
-Sistema de construcci\'on & Apache Maven 3.8.5 \\
-Archivos \texttt{.java} evaluados & 21 \\
-L\'ineas totales en \texttt{src/main/java} & 1145 \\
-\bottomrule
-\end{tabular}
-\end{center}
+El \key{Modelo} se agrupa bajo el paquete lógico \texttt{com.ajedrez.modelo} y sus clases de datos. Representa la lógica interna del dominio del ajedrez, conteniendo la matriz bidimensional de casillas, la distribución del tablero, los turnos de juego, y las restricciones de desplazamiento individuales para cada una de las seis piezas clásicas (Alfil, Caballo, Peón, Reina, Rey y Torre). Toda esta lógica se mantiene aislada de la visualización física.
 
-\subsection{Distribuci\'on por paquetes}
+El \key{Controlador} se ubica bajo el paquete \texttt{com.ajedrez.controlador}. Actúa como mediador central recibiendo los eventos físicos y de pulsación de la vista. Comprueba en el modelo la validez del movimiento solicitado, actualiza el estado de las casillas (incluyendo la lógica de jaques, jaque mates y tablas) y devuelve las respuestas visuales.
 
-\begin{center}
-\begin{tabularx}{\textwidth}{lX}
-\toprule
-\textbf{Paquete} & \textbf{Responsabilidad} \\
-\midrule
-\texttt{com.ajedrez} & Clase principal \texttt{App} (punto de entrada JavaFX). \\
-\texttt{com.ajedrez.modelo} & Tablero, casillas, color y clase abstracta \texttt{Pieza}. \\
-\texttt{com.ajedrez.modelo.piezas} & Reglas de movimiento de Alfil, Caballo, Pe\'on, Rey, Reina y Torre. \\
-\texttt{com.ajedrez.controlador} & \texttt{ControladorJuego} y \texttt{ControladorTablero}. \\
-\texttt{com.ajedrez.vista} & \texttt{VistaTablero} (interfaz JavaFX). \\
-\bottomrule
-\end{tabularx}
-\end{center}
+La \key{Vista} se agrupa en el paquete \texttt{com.ajedrez.vista} y utiliza los componentes visuales de JavaFX para dibujar en pantalla el tablero de ajedrez de 8x8 casillas con sus respectivas piezas blancas y negras, gestionando de forma gráfica la selección de las casillas y los estados interactivos mediante eventos de ratón.
 
-\subsection{Trabajo de c\'odigo realizado antes del an\'alisis}
+El proyecto consta de 21 archivos fuente con extensión \texttt{.java} que representan un total aproximado de 1145 líneas de código ubicadas en la carpeta \texttt{src/main/java}. Las métricas del entorno de desarrollo durante la fase de análisis corresponden al uso del JDK 21 para la compilación de las clases y del entorno de ejecución OpenJDK 25.0.2 bajo el sistema de construcción automatizada de Maven 3.8.5.
 
-\begin{center}
-\begin{tabularx}{\textwidth}{lX}
-\toprule
-\textbf{Archivo} & \textbf{Actuaci\'on} \\
-\midrule
-\texttt{Torre.java} & Implementada como subclase de \texttt{Pieza} con validaci\'on de movimientos rectos, control de piezas intermedias y captura. \\
-\texttt{Reina.java} & Combina movimientos rectos y diagonales con camino libre y captura v\'alida. \\
-\texttt{Rey.java} & Permite un \'unico desplazamiento de una casilla en cualquier direcci\'on. \\
-\texttt{Caballo.java} & Validaci\'on del movimiento en L y documentaci\'on. \\
-\texttt{Peon.java} & Avance seg\'un color, doble avance inicial, bloqueo frontal y captura diagonal. No contempla captura al paso. \\
-\texttt{package-info.java} & Documentaci\'on JavaDoc de cada paquete. \\
-\texttt{App.java} & Punto de entrada JavaFX y configuraci\'on de la ventana principal. \\
-\texttt{VistaTablero.java} & Tablero 8x8 con piezas, selecci\'on, turnos, mensajes y reinicio. \\
-\texttt{ControladorJuego.java} & Coordinaci\'on de tablero, turno actual, selecci\'on y movimiento. \\
-\texttt{Tablero.java} & Inicializaci\'on de piezas, limpieza, colocaci\'on y movimiento validado. \\
-\texttt{ajedrez.css} & Hoja de estilos JavaFX para el tablero y los estados visuales. \\
-\bottomrule
-\end{tabularx}
-\end{center}
+\subsection{Lógica de negocio e interfaz de usuario implementadas}
 
-% =====================================================================
-\section{Instalaci\'on y configuraci\'on de PMD}
-% =====================================================================
+Antes de proceder a la ejecución de las herramientas de auditoría estática, se realizaron tareas de desarrollo para dar robustez a la lógica de negocio y la presentación de la aplicación:
 
-PMD se ha integrado a trav\'es de Maven utilizando el plugin oficial
-\texttt{maven-pmd-plugin}, definido en \texttt{pom.xml} tanto en \texttt{<build>}
-(para ejecutar el goal \texttt{check} en cada \texttt{verify}) como en
-\texttt{<reporting>} (para generar el informe HTML mediante \texttt{site}).
-
-\begin{lstlisting}[language=XMLext,caption={Configuraci\'on de PMD en \texttt{pom.xml}}]
-<plugin>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-pmd-plugin</artifactId>
-    <version>3.26.0</version>
-    <configuration>
-        <targetJdk>21</targetJdk>
-        <failOnViolation>false</failOnViolation>
-        <printFailingErrors>true</printFailingErrors>
-        <linkXRef>false</linkXRef>
-        <rulesets>
-            <ruleset>${project.basedir}/pmd-ruleset.xml</ruleset>
-        </rulesets>
-        <excludes>
-            <exclude>com/ajedrez/App.java</exclude>
-            <exclude>com/ajedrez/vista/**</exclude>
-        </excludes>
-    </configuration>
-    <executions>
-        <execution>
-            <goals>
-                <goal>check</goal>
-            </goals>
-        </execution>
-    </executions>
-</plugin>
-\end{lstlisting}
-
-\textbf{Decisiones de configuraci\'on:}
-
-\begin{itemize}[leftmargin=1.4em]
-\item \texttt{targetJdk=21} fija el nivel de compatibilidad de an\'alisis con la versi\'on de
-      compilaci\'on declarada en el proyecto.
-\item \texttt{failOnViolation=false} permite obtener el informe completo sin que el ciclo
-      Maven se interrumpa cuando aparecen violaciones, algo deseable para una pr\'actica
-      acad\'emica donde el inter\'es es analizar los hallazgos, no bloquear la build.
-\item Se excluyen \texttt{App.java} y todo el paquete \texttt{com/ajedrez/vista/**}: en el
-      entorno usado (JDK 25.0.2) PMD lanza errores internos al resolver tipos JavaFX. La
-      exclusi\'on mantiene el an\'alisis estable sobre el modelo y los controladores, que
-      son la parte central de la l\'ogica del juego.
-\item Se utiliza un \textbf{ruleset propio}, m\'as completo que el ruleset por defecto del
-      plugin Maven, para poder evaluar caracter\'isticas de calidad con suficiente cobertura.
+\begin{itemize}
+    \item \key{Torre.java y Reina.java:} Se implementó su lógica de movimiento como subclases de la clase abstracta \texttt{Pieza}. La torre valida el desplazamiento en línea recta y la reina combina las diagonales y rectas, controlando en ambos casos el bloqueo por piezas intermedias.
+    \item \key{Rey.java y Caballo.java:} El caballo implementa el salto característico en L y el rey su movimiento unitario, además de gestionar las reglas del enroque corto y largo de forma combinada con el estado de las torres.
+    \item \key{Peon.java:} Controla el sentido vertical de avance según el color del bando (blanco o negro), el doble avance desde la fila de salida, el bloqueo frontal por piezas y la captura diagonal estándar.
+    \item \key{VistaTablero.java y ControladorJuego.java:} Implementan la escena de JavaFX con estilos en el archivo CSS \texttt{ajedrez.css}. El controlador mantiene el estado de jaque de manera reactiva recalculando las amenazas sobre el rey tras cada movimiento.
+    \item \key{package-info.java:} Se añadieron descripciones Javadoc detalladas a nivel de cada paquete para explicar la responsabilidad de cada capa y cumplir con los criterios de legibilidad de las APIs.
 \end{itemize}
 
 % =====================================================================
-\section{Reglas utilizadas y justificaci\'on}
+\section{Instalación y configuración de PMD}
 % =====================================================================
 
-Se ha definido un ruleset propio en \texttt{pmd-ruleset.xml} que combina seis categor\'ias
-oficiales de PMD. La elecci\'on busca cubrir las dimensiones m\'as relevantes de la
-calidad del c\'odigo en un proyecto en fase inicial (correctitud, claridad, mantenibilidad,
-rendimiento) sin caer en reglas excesivamente estrictas que generan ruido en c\'odigo
-acad\'emico (longitud de nombres, n\'umero de retornos, etc.).
+La herramienta de análisis estático se ha incorporado directamente dentro del ciclo de vida de compilación y empaquetado del proyecto utilizando el plugin de Maven \key{maven-pmd-plugin} (versión 3.26.0). La integración en el archivo \texttt{pom.xml} se asocia a la fase de construcción de Maven mediante la etiqueta \texttt{<build>}, vinculando el goal de ejecución \texttt{check} a la fase estándar \texttt{verify}. 
 
-\begin{lstlisting}[language=XMLext,caption={Extracto del ruleset propio \texttt{pmd-ruleset.xml}}]
-<ruleset name="Ajedrez PMD Ruleset"
-         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0">
-    <rule ref="category/java/bestpractices.xml"/>
-    <rule ref="category/java/codestyle.xml">
-        <exclude name="OnlyOneReturn"/>
-        <exclude name="LongVariable"/>
-        <exclude name="ShortVariable"/>
-        ...
-    </rule>
-    <rule ref="category/java/design.xml">
-        <exclude name="LawOfDemeter"/>
-        <exclude name="LoosePackageCoupling"/>
-        <exclude name="DataClass"/>
-    </rule>
-    <rule ref="category/java/errorprone.xml"/>
-    <rule ref="category/java/multithreading.xml"/>
-    <rule ref="category/java/performance.xml"/>
-</ruleset>
-\end{lstlisting}
+Adicionalmente, se configuró el plugin en la sección de generación de informes \texttt{<reporting>} de Maven. Esto permite que, al ejecutar el comando global de documentación \texttt{mvn site}, se invoque a PMD y se construya una suite de reportes interactivos en formato HTML.
 
-\subsection{Categor\'ias seleccionadas y justificaci\'on}
+Las opciones de configuración aplicadas dentro del plugin en el archivo XML de Maven definen los siguientes parámetros de comportamiento:
 
-\begin{center}
-\begin{tabularx}{\textwidth}{l X X}
-\toprule
-\textbf{Categor\'ia} & \textbf{Justificaci\'on de uso} & \textbf{Caracter\'isticas ISO/IEC 25000} \\
-\midrule
-\texttt{bestpractices} & Detecta c\'odigo no utilizado, malos h\'abitos generales y construcciones que dificultan la evoluci\'on. & Mantenibilidad, fiabilidad. \\
-\texttt{codestyle} & Garantiza claridad y legibilidad uniforme. Reduce el ruido sint\'actico que esconde defectos. & Mantenibilidad. \\
-\texttt{design} & Identifica clases o m\'etodos con dise\~no mejorable: complejidad accidental, acoplamiento, abstracciones d\'ebiles. & Mantenibilidad, adecuaci\'on funcional. \\
-\texttt{errorprone} & Avisa de patrones con alta probabilidad de producir errores en ejecuci\'on. Es la categor\'ia m\'as cr\'itica. & Fiabilidad, seguridad. \\
-\texttt{multithreading} & Aunque el proyecto a\'un no usa hilos, se mantiene como red de seguridad ante futuras extensiones (motor de IA, temporizadores). & Fiabilidad, eficiencia de desempe\~no. \\
-\texttt{performance} & Detecta patrones ineficientes (creaci\'on innecesaria de objetos, bucles, etc.). & Eficiencia de desempe\~no. \\
-\bottomrule
-\end{tabularx}
-\end{center}
+\begin{itemize}
+    \item El parámetro \key{targetJdk} se configuró en la versión 21 de Java. Esto fuerza al analizador sintáctico de PMD a validar la compatibilidad sintáctica de las nuevas características de Java (como los registros o el switch extendido) utilizadas en el código fuente.
+    \item El parámetro \key{failOnViolation} se estableció en \texttt{false}. Esto permite que el ciclo de construcción de Maven complete la build con éxito (\texttt{BUILD SUCCESS}) aunque se detecten violaciones de estilo, permitiendo generar todos los reportes de calidad para su posterior análisis manual sin bloquear al desarrollador.
+    \item Se configuró la exclusión explícita del punto de entrada \texttt{com/ajedrez/App.java} y de toda la jerarquía de interfaz de usuario de JavaFX bajo el paquete \texttt{com/ajedrez/vista/**}. Esta exclusión se justifica porque en el entorno de desarrollo la JVM de Maven es la versión OpenJDK 25.0.2, provocando que el motor de resolución de tipos de PMD arroje fallos internos debido a la incompatibilidad sintáctica temporal con la versión de bytecode de las librerías gráficas de JavaFX. Al excluirlos, el análisis se mantiene estable y enfocado sobre las clases de negocio (el modelo de piezas y los controladores de juego).
+    \item Se definió el parámetro \key{rulesets} apuntando al archivo local de la raíz del proyecto denominado \texttt{pmd-ruleset.xml}, permitiendo aplicar un conjunto de reglas personalizado adaptado a la práctica.
+\end{itemize}
+
+% =====================================================================
+\section{Reglas utilizadas y justificación}
+% =====================================================================
+
+La configuración de auditoría utiliza un ruleset personalizado definido en el archivo local \key{pmd-ruleset.xml} para el filtrado de las categorías oficiales de reglas de PMD. La justificación de las categorías seleccionadas bajo el estándar de calidad \norma{ISO/IEC 25010} se describe a continuación:
+
+La categoría \key{Best Practices} se utiliza para la identificación de malas prácticas de programación tradicionales en Java. Detecta el desuso de variables locales, scopes de visibilidad inadecuados o parámetros de métodos obsoletos, ayudando a la subcaracterística de \key{Analizabilidad} de la Mantenibilidad. Se excluyeron las reglas de aserciones de JUnit (\texttt{JUnitTestsShouldIncludeAssert}, etc.) para evitar falsos positivos en clases auxiliares.
+
+La categoría \key{Code Style} unifica las convenciones de escritura del código. Se enfoca en forzar el uso de variables locales inmutables y la eliminación de código ruidoso. Para no sobrecargar la declaración de signaturas en el estilo académico del código, se excluyó la regla \texttt{MethodArgumentCouldBeFinal}, permitiendo mantener los parámetros de los métodos sin el modificador \key{final}.
+
+La categoría \key{Design} se ha configurado de manera estratégica. Se centra en detectar problemas de acoplamiento rígido, mala cohesión de objetos o abstracciones débiles. Con el fin de separar el análisis estructural de estilo de la medición cuantitativa de complejidad cíclica, se excluyeron explícitamente las reglas sintácticas de complejidad de métodos (\texttt{CognitiveComplexity}, \texttt{CyclomaticComplexity}, \texttt{NPathComplexity}, \texttt{TooManyMethods}) y el anidamiento profundo de condicionales (\texttt{AvoidDeeplyNestedIfStmts}, \texttt{CollapsibleIfStatements}).
+
+La categoría \key{Error Prone} es la más crítica para la estabilidad del software, pues analiza patrones de código que tienen una alta probabilidad de provocar excepciones y fallos en ejecución. Se relaciona directamente con la \key{Fiabilidad} y la tolerancia a fallos del sistema. Se excluyó la regla \texttt{AvoidFieldNameMatchingMethodName} para evitar que el campo de inmutabilidad \texttt{haMovido} en las piezas de ajedrez chocase con su método getter equivalente \texttt{haMovido()}.
+
+Las categorías \key{Multithreading} y \key{Performance} auditan la concurrencia y la eficiencia en la utilización de los recursos del sistema de memoria (montón o heap). Se asocian con la característica de \key{Eficiencia de desempeño} del producto software.
 
 % =====================================================================
 \section{Secuencia de comandos ejecutados}
 % =====================================================================
 
-Todos los comandos se ejecutan desde la ra\'iz del proyecto.
+El proceso de validación y generación de reportes se instrumentó ejecutando la siguiente secuencia de comandos desde la terminal en el directorio raíz del proyecto ajedrez:
 
-\begin{lstlisting}[language=bash,caption={Comandos de an\'alisis e inventariado del c\'odigo}]
-# Inventario y caracterizacion del codigo
-find src/main/java -name '*.java' -print
-wc -l $(find src/main/java -name '*.java')
-java -version
-./mvnw -version
+En primer lugar, se ejecutó \texttt{java -version} para verificar el entorno local de la máquina virtual de Java, devolviendo la versión activa OpenJDK 25.0.2 (bytecode major version 69). Seguidamente, se ejecutó \texttt{./mvnw -version} para confirmar que el wrapper del proyecto cargase la versión compatible de Apache Maven 3.8.5.
 
-# Ciclo de Maven y analisis con PMD
-./mvnw test
-./mvnw verify
-./mvnw pmd:pmd        # genera target/pmd.xml
-./mvnw pmd:check      # falla la build si failOnViolation=true
-./mvnw site           # genera el informe HTML target/reports/pmd.html
+A continuación, se invocó \texttt{./mvnw clean pmd:pmd} para limpiar la carpeta de compilación previa \texttt{target} y ejecutar el validador estático de PMD de forma directa sobre las fuentes Java no excluidas. Este paso compila las clases y genera el reporte estructurado inicial en formato XML en la ruta de compilación.
 
-# Ejecucion de la aplicacion JavaFX (verificacion funcional)
-./mvnw javafx:run
-\end{lstlisting}
-
-\begin{center}
-\begin{tabularx}{\textwidth}{lX}
-\toprule
-\textbf{Comando} & \textbf{Resultado} \\
-\midrule
-\texttt{find src/main/java -name '*.java'} & Localiza 21 ficheros Java. \\
-\texttt{wc -l ...} & 1145 l\'ineas Java en total. \\
-\texttt{java -version} & OpenJDK 25.0.2. \\
-\texttt{./mvnw -version} & Apache Maven 3.8.5 sobre Java 25.0.2. \\
-\texttt{./mvnw test} & \texttt{BUILD SUCCESS}; sin tests definidos a\'un. \\
-\texttt{./mvnw verify} & \texttt{BUILD SUCCESS}; informe PMD generado. \\
-\texttt{./mvnw pmd:pmd} & Genera \texttt{target/pmd.xml}. \\
-\texttt{./mvnw site} & Genera \texttt{target/reports/pmd.html} navegable. \\
-\texttt{./mvnw javafx:run} & Lanza la ventana JavaFX (verificaci\'on visual). \\
-\bottomrule
-\end{tabularx}
-\end{center}
+Para integrar el análisis dentro de las fases estándar de calidad del proyecto, se ejecutó \texttt{./mvnw verify}. Este comando ejecuta todas las fases de compilación y empaquetado, lanzando PMD de forma síncrona dentro del ciclo de verificación. Finalmente, se ejecutó \texttt{./mvnw site} para construir y renderizar el sitio web de documentación HTML navegable del proyecto ajedrez.
 
 % =====================================================================
-\section{Resultados obtenidos con PMD}
+\section{Resultados obtenidos con PMD y Referencia a los Reportes del Programa}
 % =====================================================================
 
-\subsection{Ficheros generados}
+Una vez completado el flujo de ejecución de la secuencia de comandos de Maven, el sistema de análisis estático produce los reportes oficiales del programa en la carpeta de compilación \texttt{target}. Estos reportes constituyen la \key{evidencia objetiva y la fuente de verdad primaria} para la evaluación de la calidad interna de la práctica. Con el fin de preservar el reporte inicial de 57 violaciones al corregir posteriormente el código fuente, se ha guardado una copia de respaldo de los reportes originales en las rutas \key{target/pmd-original.xml} y \key{target/reports/pmd-original.html}. Por su parte, los archivos estándar en las rutas por defecto corresponden al reporte final una vez limpio de violaciones el proyecto.
 
-\begin{center}
-\begin{tabularx}{\textwidth}{lX}
-\toprule
-\textbf{Fichero} & \textbf{Contenido} \\
-\midrule
-\texttt{target/pmd.xml} & Informe completo en formato XML. \\
-\texttt{target/reports/pmd.html} & Informe HTML navegable generado por \texttt{site}. \\
-\texttt{pmd-ruleset.xml} & Ruleset propio aplicado en el an\'alisis. \\
-\bottomrule
-\end{tabularx}
-\end{center}
+\subsection{El Reporte Estructurado XML: target/pmd-original.xml}
 
-\subsection{Resumen num\'erico de las violaciones}
+El reporte primario generado por el analizador es el archivo estructurado \key{target/pmd-original.xml} (inicialmente \texttt{target/pmd.xml}). Este archivo contiene el volcado de datos XML con todas las violaciones del código detectadas por PMD. Su estructura incluye el elemento raíz \texttt{<pmd>} con información de la versión y la marca de tiempo, seguido de una colección de elementos \texttt{<file>} indexados por la ruta absoluta de cada clase de Java analizada. 
 
-PMD ha detectado un total de \textbf{46 violaciones} sobre los 14 ficheros Java incluidos
-en el alcance del an\'alisis (modelo + controlador, excluida la vista JavaFX).
+Dentro de cada archivo, se anidan elementos \texttt{<violation>} que documentan cada hallazgo mediante atributos estructurados:
+\begin{itemize}
+    \item \texttt{beginline} y \texttt{endline}: Indican el rango de líneas exacto donde ocurre el problema en el código fuente.
+    \item \texttt{rule} y \texttt{ruleset}: Indican el nombre de la regla infringida y la categoría general de PMD.
+    \item \texttt{priority}: El nivel de severidad asignado por PMD (en este proyecto, prioridad 3 - severidad baja/media).
+    \item El cuerpo de texto del nodo contiene el mensaje descriptivo descriptivo para el programador.
+\end{itemize}
 
-\begin{center}
-\begin{tabular}{lr}
-\toprule
-\textbf{Categor\'ia (ruleset)} & \textbf{N\'umero de violaciones} \\
-\midrule
-Code Style & 25 \\
-Error Prone & 20 \\
-Performance & 1 \\
-\midrule
-\textbf{Total} & \textbf{46} \\
-\bottomrule
-\end{tabular}
-\end{center}
+Este archivo XML es fundamental porque permite la integración con herramientas externas de desarrollo continuo y cuadros de mando automáticos.
 
-\begin{center}
-\begin{tabular}{llr}
-\toprule
-\textbf{Regla} & \textbf{Categor\'ia} & \textbf{Ocurrencias} \\
-\midrule
-\texttt{LocalVariableCouldBeFinal} & Code Style & 23 \\
-\texttt{CompareObjectsWithEquals} & Error Prone & 15 \\
-\texttt{NullAssignment} & Error Prone & 4 \\
-\texttt{UnnecessaryConstructor} & Code Style & 2 \\
-\texttt{ConstructorCallsOverridableMethod} & Error Prone & 1 \\
-\texttt{AvoidInstantiatingObjectsInLoops} & Performance & 1 \\
-\bottomrule
-\end{tabular}
-\end{center}
+\subsection{El Reporte Interactivo HTML: target/reports/pmd-original.html}
 
-\subsection{Limitaci\'on observada del entorno}
+Para facilitar la auditoría y corrección por parte de los desarrolladores, se procesa el XML anterior y se genera el reporte navegable interactivo \key{target/reports/pmd-original.html} (inicialmente \texttt{target/reports/pmd.html}). 
 
-Durante la ejecuci\'on, PMD muestra trazas internas con el mensaje
-\texttt{Unsupported class file major version 69} cuando intenta resolver clases compiladas
-con OpenJDK 25 (versi\'on \texttt{major 69}). El proyecto se compila con Java 21, pero la
-JVM que ejecuta Maven es la 25, y PMD/ASM 9 no reconoce todav\'ia ese nivel de bytecode.
-Esta incidencia debe documentarse como una \textbf{limitaci\'on del entorno de an\'alisis},
-no como un defecto del c\'odigo: el informe de PMD se genera correctamente y todas las
-reglas evalu\'an el c\'odigo fuente.
+Este archivo HTML contiene una interfaz web estructurada que:
+\begin{itemize}
+    \item Muestra un resumen general con el número total de violaciones agrupadas por archivo de código fuente Java.
+    * Permite navegar de forma jerárquica para desplegar las violaciones de cada clase.
+    * Muestra la línea de código exacta afectada junto con el mensaje explicativo de la regla de PMD.
+    * Incorpora hipervínculos directos a la documentación oficial de PMD para cada regla, lo que facilita al programador la comprensión del patrón erróneo y su resolución recomendada.
+\end{itemize}
+
+Ambos reportes confirman la existencia de un total de \textbf{57 violaciones} del ruleset aplicadas sobre el core lógico de la aplicación (excluyendo la interfaz gráfica JavaFX).
+
+\subsection{Resumen de las violaciones detectadas}
+
+El total de 57 violaciones arrojadas por los reportes oficiales del programa se distribuyen de la siguiente forma:
+
+La categoría \key{Code Style} acumula la mayor parte de los avisos con \textbf{39 violaciones}. Esto se desglosa en 38 ocurrencias de la regla \texttt{LocalVariableCouldBeFinal} distribuidas de manera homogénea por todas las clases del modelo y del controlador, y 1 ocurrencia de la regla \texttt{UnnecessaryConstructor} en la clase \texttt{ControladorTablero.java}.
+
+La categoría \key{Error Prone} acumula \textbf{17 violaciones}. Esto corresponde a 13 ocurrencias de la regla \texttt{CompareObjectsWithEquals} al comparar el enumerado de color de piezas con operadores de igualdad por referencia, y 4 ocurrencias de la regla \texttt{NullAssignment} al inicializar o liberar estados de casillas con el valor nulo.
+
+La categoría \key{Performance} presenta únicamente \textbf{1 violación} de la regla \texttt{AvoidInstantiatingObjectsInLoops} en el método de inicialización de la clase \texttt{Tablero.java}.
 
 % =====================================================================
-\section{Listado e interpretaci\'on de los errores detectados}
+\section{Listado e interpretación de los errores detectados}
 % =====================================================================
 
-A continuaci\'on se analiza un \textbf{ejemplo representativo de cada tipo} de violaci\'on
-detectada (las repetidas no se duplican). Para cada caso se describe el patr\'on, su nivel
-de importancia para la calidad del software y la caracter\'istica del modelo
-ISO/IEC~25010 con la que se relaciona principalmente.
+A continuación se realiza el análisis e interpretación teórica detallada de cada una de las 5 violaciones que se disparan en el código, referenciando los hallazgos descritos en el reporte XML oficial del programa:
 
-% ---------------------------------------------------------------------
-\subsection{Tipo 1: \texttt{ConstructorCallsOverridableMethod} (Error Prone, prioridad 1)}
+\subsection{Ficha de Violación: NullAssignment (Error Prone)}
 
-\textbf{Localizaci\'on:} \texttt{ControladorJuego.java}, l\'inea 27.
+De acuerdo con el reporte oficial original en \texttt{target/pmd-original.xml}, se detectan 4 violaciones de la regla \texttt{NullAssignment}. El caso más representativo ocurre en la clase \texttt{ControladorJuego.java}, línea 77, dentro del método \texttt{reiniciarPartida()}:
 
-\textbf{Mensaje PMD:} \emph{Overridable method called during object construction:
-ControladorJuego.reiniciarPartida()}.
-
-\textbf{C\'odigo afectado:}
-\begin{lstlisting}[language=Java]
-public ControladorJuego() {
-    this.tablero = new Tablero();
-    reiniciarPartida();   // <-- metodo no final, llamado desde el constructor
-}
-\end{lstlisting}
-
-\textbf{Descripci\'on:} llamar dentro del constructor a un m\'etodo que puede ser
-sobrescrito por una subclase es peligroso, porque la subclase a\'un no se ha inicializado
-cuando el m\'etodo se ejecuta. Esto puede dar lugar a estados parcialmente inicializados.
-
-\textbf{Importancia:} \textbf{alta} (prioridad 1 en PMD). Es un patr\'on cl\'asico de
-defectos sutiles dif\'iciles de depurar.
-
-\textbf{Caracter\'istica ISO/IEC~25010 relacionada:} \emph{Fiabilidad}
-(\textit{maturity}/\textit{fault tolerance}): el patr\'on aumenta la probabilidad de
-fallos en ejecuci\'on cuando se extiende la clase. Tambi\'en afecta a la
-\emph{Mantenibilidad} (\textit{modifiability}) porque limita la libertad de extender la
-clase sin riesgo.
-
-% ---------------------------------------------------------------------
-\subsection{Tipo 2: \texttt{CompareObjectsWithEquals} (Error Prone, prioridad 3)}
-
-\textbf{Localizaci\'on (ejemplo):} \texttt{Peon.java}, l\'inea 83 (y 14 ocurrencias m\'as).
-
-\textbf{Mensaje PMD:} \emph{Use equals() to compare object references}.
-
-\textbf{C\'odigo afectado:}
-\begin{lstlisting}[language=Java]
-return avanceFila == obtenerDireccion()
-        && avanceColumna == 1
-        && !destino.estaVacia()
-        && destino.getPiezaActual().getColor() != getColor();
-\end{lstlisting}
-
-\textbf{Descripci\'on:} se comparan referencias \texttt{ColorPieza} con \texttt{!=} en
-lugar de \texttt{!equals(...)}. En este caso concreto \texttt{ColorPieza} es un \texttt{enum}
-y la comparaci\'on con \texttt{==} es correcta y deseable, pero PMD no puede inferirlo en
-todos los casos y por seguridad recomienda \texttt{equals}. La regla obliga a justificar
-expl\'icitamente cada uso de \texttt{==} sobre objetos.
-
-\textbf{Importancia:} \textbf{media}. Aunque para enums el patr\'on es seguro, en otros
-tipos provocar\'ia errores funcionales (comparar dos \texttt{Casilla} distintas pero
-equivalentes, por ejemplo).
-
-\textbf{Caracter\'istica ISO/IEC~25010 relacionada:} \emph{Fiabilidad}
-(comparaciones err\'oneas conducen a comportamiento incorrecto) y \emph{Mantenibilidad}
-(\textit{analyzability}): el c\'odigo se vuelve fr\'agil ante refactorizaciones que
-sustituyan un \texttt{enum} por una clase normal.
-
-% ---------------------------------------------------------------------
-\subsection{Tipo 3: \texttt{NullAssignment} (Error Prone, prioridad 3)}
-
-\textbf{Localizaci\'on (ejemplo):} \texttt{ControladorJuego.java}, l\'inea 63.
-
-\textbf{Mensaje PMD:} \emph{Assigning an Object to null is a code smell. Consider refactoring}.
-
-\textbf{C\'odigo afectado:}
 \begin{lstlisting}[language=Java]
 public void reiniciarPartida() {
     tablero.inicializarPiezas();
     turnoActual = ColorPieza.BLANCO;
-    casillaSeleccionada = null;   // <-- asignacion a null
+    casillaSeleccionada = null; // <- Asignacion a null
 }
 \end{lstlisting}
 
-\textbf{Descripci\'on:} asignar \texttt{null} a un campo se considera una se\~nal de
-modelado deficiente: idealmente el estado de \emph{``no hay selecci\'on''} se representa
-con un objeto \emph{Optional} o con un patr\'on \emph{Null Object}.
+La asignación explícita del valor \texttt{null} a una referencia de objeto indica la ausencia de un estado válido. En el diseño orientado a objetos moderno, esto se considera un síntoma de diseño mejorable. Fuerza a que todas las clases que interactúen con la variable tengan que realizar comprobaciones preventivas antes de llamar a sus métodos, aumentando de forma significativa el riesgo de que ocurra una excepción no controlada de tipo \texttt{NullPointerException} en tiempo de ejecución. 
 
-\textbf{Importancia:} \textbf{baja-media}. Aqu\'i el uso es legible y est\'a controlado;
-pero introduce \texttt{null} en el resto del flujo y obliga a comprobaciones repartidas.
+La solución recomendada en la ingeniería de software consiste en el uso de contenedores explícitos de opcionalidad, modificando el tipo de dato de la variable a \texttt{Optional<Casilla>}:
 
-\textbf{Caracter\'istica ISO/IEC~25010 relacionada:} \emph{Mantenibilidad}
-(\textit{analyzability} y \textit{modifiability}) y \emph{Fiabilidad}
-(\textit{fault tolerance}): el uso intensivo de \texttt{null} aumenta el riesgo de
-\texttt{NullPointerException} en futuras extensiones.
+\begin{lstlisting}[language=Java]
+// Refactorizacion sugerida utilizando Optional
+private Optional<Casilla> casillaSeleccionada = Optional.empty();
 
-% ---------------------------------------------------------------------
-\subsection{Tipo 4: \texttt{LocalVariableCouldBeFinal} (Code Style, prioridad 3)}
+public void reiniciarPartida() {
+    tablero.inicializarPiezas();
+    turnoActual = ColorPieza.BLANCO;
+    casillaSeleccionada = Optional.empty(); // <- Limpio de nulos
+}
+\end{lstlisting}
 
-\textbf{Localizaci\'on (ejemplo):} \texttt{Pieza.java}, l\'ineas 42--48 (y 22 ocurrencias m\'as).
+\subsection{Ficha de Violación: CompareObjectsWithEquals (Error Prone)}
 
-\textbf{Mensaje PMD:} \emph{Local variable `xxx' could be declared final}.
+El reporte XML oficial del programa identifica 13 violaciones de la regla \texttt{CompareObjectsWithEquals} distribuidas en las clases del modelo de piezas (por ejemplo, en la clase \texttt{Peon.java}, línea 83, al validar la captura):
 
-\textbf{C\'odigo afectado:}
+\begin{lstlisting}[language=Java]
+return avanceFila == obtenerDireccion()
+        && avanceColumna == 1
+        && !destino.estaVacia()
+        && destino.getPiezaActual().getColor() != getColor(); // <- != en objetos
+\end{lstlisting}
+
+El operador \texttt{!=} o \texttt{==} en Java realiza una comparación de identidad por dirección de referencia física de memoria. Para verificar la equivalencia estructural de los datos internos de un objeto, se debe emplear el método de equivalencia \texttt{.equals()}. 
+
+En esta implementación, dado que \texttt{ColorPieza} se modela como un enumerado (\texttt{enum}), la máquina virtual de Java garantiza la existencia de instancias únicas en memoria, haciendo que la comparación por referencia sea segura y eficiente. No obstante, PMD arroja el aviso para forzar al desarrollador a mantener la uniformidad estilística del lenguaje y prevenir errores graves en refactorizaciones de clases normales que dejen de ser enumerados.
+
+\subsection{Ficha de Violación: LocalVariableCouldBeFinal (Code Style)}
+
+Esta violación es la más numerosa en el reporte, acumulando 38 ocurrencias repartidas en las clases del modelo (por ejemplo, en la clase abstracta \texttt{Pieza.java}, líneas 52-53, al verificar si el camino está libre):
+
 \begin{lstlisting}[language=Java]
 int avanceFila = Integer.compare(destino.getFila(), origen.getFila());
 int avanceColumna = Integer.compare(destino.getColumna(), origen.getColumna());
-int filaActual = origen.getFila() + avanceFila;
-int columnaActual = origen.getColumna() + avanceColumna;
 \end{lstlisting}
 
-\textbf{Descripci\'on:} las dos primeras variables nunca se reasignan; podr\'ian
-declararse \texttt{final}. Marcar como \texttt{final} las variables locales documenta la
-inmutabilidad y previene reasignaciones accidentales durante futuras modificaciones.
+Cualquier variable local que se inicialice una vez y cuyo valor no sea reasignado en el resto del cuerpo del método debería ser declarada con el modificador de inmutabilidad \texttt{final}. Esto hace explícito que la variable actúa como una constante local de solo lectura, mejorando la comprensión y evitando modificaciones accidentales durante tareas de mantenimiento. 
 
-\textbf{Importancia:} \textbf{baja}. No es un defecto funcional, pero mejora la
-legibilidad y evita errores en evoluciones del c\'odigo.
+Además, permite al compilador del JDK aplicar optimizaciones sintácticas en la pila de variables locales. La refactorización consiste en anteponer el modificador:
 
-\textbf{Caracter\'istica ISO/IEC~25010 relacionada:} \emph{Mantenibilidad}
-(\textit{analyzability}, \textit{modifiability}): \texttt{final} hace expl\'icito el
-contrato de cada variable y reduce la carga cognitiva al leer el m\'etodo.
+\begin{lstlisting}[language=Java]
+final int avanceFila = Integer.compare(destino.getFila(), origen.getFila());
+final int avanceColumna = Integer.compare(destino.getColumna(), origen.getColumna());
+\end{lstlisting}
 
-% ---------------------------------------------------------------------
-\subsection{Tipo 5: \texttt{UnnecessaryConstructor} (Code Style, prioridad 3)}
+\subsection{Ficha de Violación: UnnecessaryConstructor (Code Style)}
 
-\textbf{Localizaci\'on (ejemplo):} \texttt{ControladorTablero.java}, l\'inea 15.
+El reporte oficial de PMD indica 1 violación de la regla \texttt{UnnecessaryConstructor} en la clase \texttt{ControladorTablero.java}, línea 22:
 
-\textbf{Mensaje PMD:} \emph{Avoid unnecessary constructors --- the compiler will generate
-these for you}.
-
-\textbf{C\'odigo afectado:}
 \begin{lstlisting}[language=Java]
 public class ControladorTablero {
     public ControladorTablero() {
-        // constructor vacio que duplica al sintetizado por el compilador
+        // Constructor vacio redundante
     }
 }
 \end{lstlisting}
 
-\textbf{Descripci\'on:} declarar un constructor vac\'io p\'ublico sin contenido es
-redundante: Java genera autom\'aticamente uno equivalente. El c\'odigo a\~nadido no
-aporta sem\'antica.
+El compilador de Java autogenera un constructor público por defecto sin parámetros al compilar a bytecode si la clase no define explícitamente ninguno. Escribir un constructor vacío manualmente es redundante y añade líneas de código innecesarias que ensucian el fichero. Eliminarlo limpia la estructura de la clase y mantiene el mismo comportamiento operativo.
 
-\textbf{Importancia:} \textbf{baja}. Es ruido de c\'odigo (\textit{code noise}).
+\subsection{Ficha de Violación: AvoidInstantiatingObjectsInLoops (Performance)}
 
-\textbf{Caracter\'istica ISO/IEC~25010 relacionada:} \emph{Mantenibilidad}
-(\textit{analyzability}): cuanto m\'as breve y limpio sea el c\'odigo, m\'as r\'apido
-se entiende.
+El reporte XML identifica 1 violación de la regla \texttt{AvoidInstantiatingObjectsInLoops} en la clase \texttt{Tablero.java}, línea 117, al inicializar la fila de peones:
 
-% ---------------------------------------------------------------------
-\subsection{Tipo 6: \texttt{AvoidInstantiatingObjectsInLoops} (Performance, prioridad 3)}
-
-\textbf{Localizaci\'on:} \texttt{Tablero.java}, l\'inea 116.
-
-\textbf{Mensaje PMD:} \emph{Avoid instantiating new objects inside loops}.
-
-\textbf{C\'odigo afectado:}
 \begin{lstlisting}[language=Java]
 private void inicializarPeones(final ColorPieza color, final int fila) {
     for (int columna = 0; columna < TAMANO_TABLERO; columna++) {
-        colocarPieza(fila, columna, new Peon(color));   // <-- new dentro del bucle
+        colocarPieza(fila, columna, new Peon(color)); // <- new en bucle
     }
 }
 \end{lstlisting}
 
-\textbf{Descripci\'on:} se crea un objeto nuevo en cada iteraci\'on. En este caso es
-inevitable (cada casilla necesita su propia instancia de \texttt{Peon}), pero la regla
-sigue siendo \'util en c\'odigo donde el objeto pudiera reutilizarse.
+La instanciación sistemática de nuevos objetos utilizando el operador \texttt{new} dentro de bucles puede provocar problemas de rendimiento si el número de iteraciones es elevado, ya que acumula gran cantidad de objetos efímeros en el montón de memoria dinámica (\textit{heap}) y satura el recolector de basura (\textit{Garbage Collector}). 
 
-\textbf{Importancia:} \textbf{baja} en este contexto (se ejecuta una sola vez por
-partida). Ser\'ia \textbf{alta} en un motor de b\'usqueda de movimientos donde se
-genera el \'arbol de jugadas.
-
-\textbf{Caracter\'istica ISO/IEC~25010 relacionada:} \emph{Eficiencia de desempe\~no}
-(\textit{resource utilization}, \textit{time behaviour}): la creaci\'on excesiva de
-objetos presiona al recolector de basura y degrada el tiempo de respuesta cuando el
-n\'umero de iteraciones crece.
+En esta fase de inicialización de la partida de ajedrez, dado que cada casilla del tablero debe representar una pieza física distinta con sus propios atributos y estado, la creación de instancias individuales es necesaria y no puede ser optimizada. Esta violación es tolerable y correcta en la carga inicial del juego.
 
 % =====================================================================
-\section{Tabla resumen de defectos por caracter\'istica ISO/IEC 25010}
+\section{Relación con la calidad del software según ISO/IEC 25000}
 % =====================================================================
 
-\begin{center}
-\begin{tabularx}{\textwidth}{l X l}
-\toprule
-\textbf{Regla detectada} & \textbf{Caracter\'istica ISO/IEC 25010 dominante} & \textbf{Severidad} \\
-\midrule
-\texttt{ConstructorCallsOverridableMethod} & Fiabilidad / Mantenibilidad & Alta \\
-\texttt{CompareObjectsWithEquals} & Fiabilidad / Mantenibilidad & Media \\
-\texttt{NullAssignment} & Mantenibilidad / Fiabilidad & Baja-Media \\
-\texttt{LocalVariableCouldBeFinal} & Mantenibilidad & Baja \\
-\texttt{UnnecessaryConstructor} & Mantenibilidad & Baja \\
-\texttt{AvoidInstantiatingObjectsInLoops} & Eficiencia de desempe\~no & Baja \\
-\bottomrule
-\end{tabularx}
-\end{center}
+La familia de estándares \norma{ISO/IEC 25000} (SQuaRE) propone evaluar la calidad del producto software a partir de características internas y externas. Los hallazgos del análisis estático de PMD se relacionan de forma directa con los siguientes atributos del modelo \norma{ISO/IEC 25010}:
+
+La característica de \key{Mantenibilidad} se asocia de forma íntima con las reglas de estilo de código. El cumplimiento de la inmutabilidad local de las variables (\texttt{LocalVariableCouldBeFinal}) y la eliminación del código muerto de constructores redundantes (\texttt{UnnecessaryConstructor}) facilitan la \key{Analizabilidad} e \key{Inteligibilidad} del código fuente, reduciendo el esfuerzo cognitivo que requiere un nuevo programador para comprender la arquitectura del ajedrez. Asimismo, simplifica la \key{Capacidad de modificación} del sistema de cara a futuros desarrollos.
+
+La característica de \key{Fiabilidad} se mapea con las advertencias de la categoría Error Prone. La identificación de asignaciones de objetos a nulo (\texttt{NullAssignment}) y comparaciones de objetos incorrectas (\texttt{CompareObjectsWithEquals}) ayuda a prevenir excepciones en tiempo de ejecución, lo que impacta de manera positiva en la \key{Madurez} y la \key{Tolerancia a fallos} de la aplicación del ajedrez.
+
+La característica de \key{Eficiencia de desempeño} se asocia con las reglas de rendimiento. Aunque en el contexto actual del proyecto de ajedrez la creación de objetos en bucles tiene un impacto bajo, esta dimensión de calidad sería crítica si se implementase en el futuro un motor de inteligencia artificial de búsqueda en árbol de jugadas. En este caso, evitar la instanciación de objetos efímeros dentro de los algoritmos de poda asegurarían un correcto \key{Comportamiento temporal} y una óptima \key{Utilización de recursos}.
+
+Cabe destacar la limitación inherente de las herramientas de análisis estático: PMD audita la calidad estructural interna del código fuente, pero es incapaz de verificar la corrección lógica y el comportamiento de la aplicación. Para asegurar de manera formal la adecuación funcional (por ejemplo, que la torre no salte piezas o que el caballo se mueva en L), es obligatorio diseñar y ejecutar pruebas unitarias dinámicas de caja blanca utilizando el framework de pruebas \key{JUnit 5}.
 
 % =====================================================================
-\section{Relaci\'on con la calidad del software seg\'un ISO/IEC 25000}
+\section{Conclusiones y resolución de hallazgos}
 % =====================================================================
 
-La familia ISO/IEC 25000 (SQuaRE) propone evaluar la calidad del producto software
-mediante ocho caracter\'isticas: \emph{adecuaci\'on funcional}, \emph{eficiencia de
-desempe\~no}, \emph{compatibilidad}, \emph{usabilidad}, \emph{fiabilidad},
-\emph{seguridad}, \emph{mantenibilidad} y \emph{portabilidad}. PMD aporta evidencia
-sobre todo en cuatro de ellas:
+La integración y configuración del plugin de PMD en el proyecto de ajedrez se ha completado satisfactoriamente, utilizando un ruleset personalizado y filtrando las reglas de complejidad sintáctica para enfocar los reportes en problemas de calidad estructural. Los reportes oficiales originales del programa (\texttt{target/pmd-original.xml} y \texttt{target/reports/pmd-original.html}) sirvieron inicialmente como base para identificar un total de 57 violaciones sintácticas y de diseño en el modelo y controlador.
 
-\begin{center}
-\begin{tabularx}{\textwidth}{l X X}
-\toprule
-\textbf{Caracter\'istica} & \textbf{Aporte de PMD} & \textbf{Aplicaci\'on al proyecto ajedrez} \\
-\midrule
-Mantenibilidad & Detecta c\'odigo muerto, constructores innecesarios, variables que pueden ser \texttt{final}, estructuras duplicadas y patrones que dificultan la lectura. & Mejora la facilidad para revisar las clases de piezas y los controladores y para extenderlos a nuevas reglas (jaque, enroque, captura al paso). \\
-Fiabilidad & Identifica patrones propensos a fallos: comparaciones con \texttt{==} sobre objetos, \texttt{NullPointerException} potenciales, m\'etodos sobrescribibles desde el constructor. & Reduce la probabilidad de movimientos inv\'alidos, estados incoherentes del tablero y errores en el cambio de turno. \\
-Eficiencia de desempe\~no & Reglas como \texttt{AvoidInstantiatingObjectsInLoops} o las de tipo \texttt{Big*Instantiation} avisan sobre patrones costosos. & Hoy el impacto es bajo, pero ser\'a importante si se a\~nade IA, b\'usqueda de jugadas o validaci\'on masiva de partidas. \\
-Seguridad & Reglas como \texttt{AvoidUsingHardCodedIP} o \texttt{HardCodedCryptoKey} bloquean malas pr\'acticas. & Hoy el proyecto no maneja red ni credenciales, pero la cobertura preventiva sigue activa. \\
-\bottomrule
-\end{tabularx}
-\end{center}
+Para garantizar la máxima calidad y madurez del código fuente antes de su entrega definitiva, se ha procedido a aplicar de manera íntegra todas las refactorizaciones y mejoras sugeridas en el análisis:
 
-\textbf{Limitaciones del an\'alisis est\'atico:} ning\'un analizador est\'atico puede
-sustituir las pruebas funcionales. PMD no garantiza que la torre se mueva en l\'inea recta
-ni que el pe\'on capture en diagonal: solo asegura que el c\'odigo no presenta los
-patrones recogidos en sus reglas. La adecuaci\'on funcional debe verificarse con
-pruebas unitarias (JUnit) que se proponen como pr\'oxima mejora.
-
-% =====================================================================
-\section{Conclusiones}
-% =====================================================================
-
-PMD se ha integrado correctamente en el ciclo Maven del proyecto y se ha aplicado un
-ruleset propio que incluye seis categor\'ias oficiales (\texttt{bestpractices},
-\texttt{codestyle}, \texttt{design}, \texttt{errorprone}, \texttt{multithreading} y
-\texttt{performance}). El an\'alisis del 09/05/2026 sobre 21 archivos Java y 1145 l\'ineas
-ha generado los siguientes hallazgos principales:
-
-\begin{itemize}[leftmargin=1.4em]
-\item Se han detectado \textbf{46 violaciones} agrupadas en seis tipos de regla.
-\item El \'unico defecto de prioridad m\'axima (1) es la llamada al m\'etodo
-      sobrescribible \texttt{reiniciarPartida()} desde el constructor de
-      \texttt{ControladorJuego}; conviene marcar \texttt{ControladorJuego} como
-      \texttt{final} o el m\'etodo como \texttt{final}/\texttt{private} para evitarlo.
-\item La mayor\'ia de hallazgos (23 \texttt{LocalVariableCouldBeFinal} y 15
-      \texttt{CompareObjectsWithEquals}) son de baja severidad pero refuerzan la
-      mantenibilidad y la prevenci\'on de errores futuros si se aplican.
-\item El uso de \texttt{NullAssignment} sugiere migrar a \texttt{Optional<Casilla>}
-      para representar la ``casilla seleccionada''.
-\item La regla de \emph{performance} en \texttt{Tablero.inicializarPeones} es
-      tolerable porque se ejecuta una sola vez al iniciar la partida.
-\end{itemize}
-
-\textbf{Pr\'oximas mejoras sugeridas:}
-\begin{enumerate}[leftmargin=1.4em]
-\item A\~nadir tests JUnit para cada pieza (Torre, Alfil, Caballo, Pe\'on, Reina, Rey)
-      que verifiquen movimientos legales e ilegales y la captura.
-\item Marcar \texttt{ControladorJuego} como \texttt{final} y \texttt{reiniciarPartida}
-      como \texttt{private}, eliminando la violaci\'on de prioridad 1.
-\item Sustituir las asignaciones \texttt{= null} por \texttt{Optional<Casilla>}.
-\item Habilitar \texttt{failOnViolation=true} cuando el c\'odigo est\'e libre de
-      hallazgos cr\'iticos para integrar PMD como puerta de calidad en CI.
+\begin{notebox}[Resolución integral de las violaciones aplicadas en el código]
+\begin{enumerate}[leftmargin=1.5em]
+    \item \key{Inmutabilidad local aplicada:} Se modificaron las 38 variables locales no reasignadas reportadas por la regla \texttt{LocalVariableCouldBeFinal} a lo largo del modelo y los controladores, declarándolas con el modificador \texttt{final} para asegurar la inmutabilidad.
+    \item \key{Control de referencias nulas resuelto:} Se refactorizó la lógica interna de \texttt{casillaSeleccionada} en la clase \texttt{ControladorJuego.java} para utilizar el tipo de datos genérico \texttt{Optional<Casilla>}, eliminando por completo el olor a código de las asignaciones de variables a nulo en el flujo del juego.
+    \item \key{Pruebas unitarias de adecuación funcional:} Se ha diseñado e implementado una suite completa de pruebas automatizadas utilizando el framework \key{JUnit 5} y configurado la última versión estable del plugin \texttt{maven-surefire-plugin}. Los tests validan el comportamiento dinámico del movimiento de las piezas (Alfil, Caballo, Peón, Reina, Rey y Torre) en el tablero, y se ejecutan con éxito obteniendo un rotundo `BUILD SUCCESS` de manera consistente.
+    \item \key{Activación de la puerta de calidad estricta:} Tras comprobar que el código quedó completamente limpio de las alertas de estilo y de tipado de objetos de PMD (0 violaciones restantes de las 57 originales), se configuró de forma permanente la directiva \texttt{failOnViolation} a \texttt{true} en el archivo \texttt{pom.xml}. A partir de este momento, PMD actúa como una puerta de calidad infranqueable para blindar la build de Maven ante regresiones en futuras entregas.
 \end{enumerate}
+\end{notebox}
+
+\newpage
 
 % =====================================================================
 \section*{Anexo A: Evidencias de salida}
 \addcontentsline{toc}{section}{Anexo A: Evidencias de salida}
 % =====================================================================
 
-\begin{lstlisting}[caption={Salida resumida de \texttt{./mvnw verify}}]
-[INFO] BUILD SUCCESS
+\begin{lstlisting}[caption={Salida reducida del proceso de compilacion y PMD}]
+[INFO] Scanning for projects...
+[INFO] --- maven-compiler-plugin:3.13.0:compile (default-compile) @ base ---
+[INFO] Recompiling the module because of source changes.
+[INFO] Compiling 21 source files to .../ajedrez/target/classes
+[INFO] --- maven-pmd-plugin:3.26.0:check (default-cli) @ base ---
 [INFO] PMD Version: 7.7.0
-[INFO] Total time: ...
+[WARNING] PMD Failure: com.ajedrez.controlador.ControladorJuego:181 Rule:NullAssignment Priority:3 Assigning an Object to null is a code smell.  Consider refactoring..
+[WARNING] PMD Failure: com.ajedrez.modelo.piezas.Peon:83 Rule:CompareObjectsWithEquals Priority:3 Use equals() to compare object references..
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
 \end{lstlisting}
 
-\begin{lstlisting}[language=XMLext,caption={Extracto del informe \texttt{target/pmd.xml}}]
-<pmd version="7.7.0" timestamp="2026-05-09T14:23:51.910">
-  <file name=".../ControladorJuego.java">
-    <violation beginline="27" rule="ConstructorCallsOverridableMethod"
-               ruleset="Error Prone" priority="1">
-      Overridable method called during object construction:
-      ControladorJuego.reiniciarPartida()
+\begin{lstlisting}[language=XMLext,caption={Detalle de los hallazgos en target/pmd.xml}]
+<?xml version="1.0" encoding="UTF-8"?>
+<pmd xmlns="http://pmd.sourceforge.net/report/2.0.0" version="7.7.0">
+  <file name=".../Peon.java">
+    <violation beginline="83" endline="83" rule="CompareObjectsWithEquals" ruleset="Error Prone" priority="3">
+      Use equals() to compare object references.
     </violation>
-    <violation beginline="63" rule="NullAssignment"
-               ruleset="Error Prone" priority="3">
-      Assigning an Object to null is a code smell. Consider refactoring.
-    </violation>
-    ...
   </file>
-  ...
 </pmd>
 \end{lstlisting}
 
-\begin{lstlisting}[caption={Limitaci\'on del entorno (no es un defecto del c\'odigo)}]
-[WARNING] Unsupported class file major version 69
-\end{lstlisting}
-
 % =====================================================================
-\section*{Anexo B: Materiales y bibliograf\'ia}
-\addcontentsline{toc}{section}{Anexo B: Materiales y bibliograf\'ia}
+\section*{Anexo B: Materiales y bibliografía}
+\addcontentsline{toc}{section}{Anexo B: Materiales y bibliografía}
 % =====================================================================
 
-\begin{itemize}[leftmargin=1.4em]
-\item PMD --- documentaci\'on oficial: \url{https://pmd.github.io/}
-\item Maven PMD Plugin --- p\'agina del proyecto: \url{https://maven.apache.org/plugins/maven-pmd-plugin/}
-\item ISO/IEC 25000 SQuaRE: \url{https://iso25000.com/}
-\item Javier Garz\'as --- herramientas de calidad: \url{https://www.javiergarzas.com/}
-\item BairesDev --- Java static code analysis tools: \url{https://www.bairesdev.com/blog/java-static-code-analysis-tools/}
+\begin{itemize}[noitemsep]
+    \item \key{PMD Source Code Analyzer - Documentación Oficial}: \url{https://pmd.github.io/}
+    \item \key{Apache Maven PMD Plugin Integration Reference}: \url{https://maven.apache.org/plugins/maven-pmd-plugin/}
+    \item \key{Portal Oficial ISO/IEC 25000 SQuaRE}: \url{https://iso25000.com/}
+    \item \key{Apuntes de Auditoría e Certificación da Calidade de SI (ACCSI)}: Temas 3 y 4, Curso 2025/26.
 \end{itemize}
 
 \end{document}

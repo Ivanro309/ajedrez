@@ -29,7 +29,7 @@ public class Peon extends Pieza {
             return false;
         }
 
-        if (origen == destino || !esMovimientoRectoPeon(origen, destino)) {
+        if (origen.equals(destino) || !esMovimientoRectoPeon(origen, destino)) {
             return esCapturaValida(origen, destino);
         }
 
@@ -44,9 +44,9 @@ public class Peon extends Pieza {
      * @return true si el movimiento es un avance frontal valido.
      */
     private boolean esMovimientoRectoPeon(final Casilla origen, final Casilla destino) {
-        int avanceFila = destino.getFila() - origen.getFila();
-        int avanceColumna = destino.getColumna() - origen.getColumna();
-        int direccion = obtenerDireccion();
+        final int avanceFila = destino.getFila() - origen.getFila();
+        final int avanceColumna = destino.getColumna() - origen.getColumna();
+        final int direccion = obtenerDireccion();
 
         if (avanceColumna != 0) {
             return false;
@@ -74,13 +74,13 @@ public class Peon extends Pieza {
      * @return true si el destino contiene una pieza rival en diagonal.
      */
     private boolean esCapturaValida(final Casilla origen, final Casilla destino) {
-        int avanceFila = destino.getFila() - origen.getFila();
-        int avanceColumna = Math.abs(destino.getColumna() - origen.getColumna());
+        final int avanceFila = destino.getFila() - origen.getFila();
+        final int avanceColumna = Math.abs(destino.getColumna() - origen.getColumna());
 
         return avanceFila == obtenerDireccion()
                 && avanceColumna == 1
                 && !destino.estaVacia()
-                && destino.getPiezaActual().getColor() != getColor();
+                && !destino.getPiezaActual().getColor().equals(getColor());
     }
 
     /**
@@ -89,7 +89,7 @@ public class Peon extends Pieza {
      * @return -1 para blanco y 1 para negro.
      */
     private int obtenerDireccion() {
-        return getColor() == ColorPieza.BLANCO ? -1 : 1;
+        return getColor().equals(ColorPieza.BLANCO) ? -1 : 1;
     }
 
     /**
@@ -98,6 +98,6 @@ public class Peon extends Pieza {
      * @return fila inicial correspondiente al color de la pieza.
      */
     private int obtenerFilaInicial() {
-        return getColor() == ColorPieza.BLANCO ? 6 : 1;
+        return getColor().equals(ColorPieza.BLANCO) ? 6 : 1;
     }
 }
