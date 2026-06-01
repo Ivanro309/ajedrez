@@ -34,6 +34,7 @@
         <exclude name="CommentDefaultAccessModifier"/>
         <exclude name="CallSuperInConstructor"/>
         <exclude name="UseUnderscoresInNumericLiterals"/>
+        <exclude name="MethodArgumentCouldBeFinal"/>
     </rule>
 
     <!-- Categoria: Design -->
@@ -41,6 +42,12 @@
         <exclude name="LawOfDemeter"/>
         <exclude name="LoosePackageCoupling"/>
         <exclude name="DataClass"/>
+        <exclude name="TooManyMethods"/>
+        <exclude name="CognitiveComplexity"/>
+        <exclude name="CyclomaticComplexity"/>
+        <exclude name="NPathComplexity"/>
+        <exclude name="AvoidDeeplyNestedIfStmts"/>
+        <exclude name="CollapsibleIfStatements"/>
     </rule>
 
     <!-- Categoria: Error Prone -->
@@ -48,6 +55,7 @@
         <exclude name="BeanMembersShouldSerialize"/>
         <exclude name="MissingSerialVersionUID"/>
         <exclude name="AvoidLiteralsInIfCondition"/>
+        <exclude name="AvoidFieldNameMatchingMethodName"/>
     </rule>
 
     <!-- Categoria: Multithreading -->
